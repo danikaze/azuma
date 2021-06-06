@@ -13,8 +13,6 @@ import Head from 'next/head';
 import { store } from '@store';
 import { appWithTranslation } from '@utils/i18n';
 import { useUserData } from '@utils/auth';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core';
 import { getLogger, globalLogger, Logger, NsLogger } from '@utils/logger';
 import { theme } from '@themes';
 import { UserAuthData } from '@model/user';
@@ -83,10 +81,7 @@ const App: FunctionComponent<NextAppProps<AppPageProps>> = ({
         <meta name="theme-color" content={theme.palette.primary.main} />
       </Head>
       <Logger.Provider value={globalLogger}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
+        <Component {...pageProps} />
       </Logger.Provider>
     </>
   );

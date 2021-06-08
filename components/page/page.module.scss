@@ -1,0 +1,39 @@
+@use '../../styles/constants/animations.scss' as animations;
+@use '../../styles/constants/breakpoints.scss' as breakpoints;
+
+.root {
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// .header {}
+
+.container {
+  margin: 0 auto;
+}
+
+.main {
+  flex-grow: 1;
+  padding: 20px 0;
+  margin: 0;
+  width: 100%;
+  max-width: 1920px;
+  align-self: center;
+  transition: padding animations.$responsive-duration;
+}
+
+@media (min-width: breakpoints.$md-min) {
+  .main {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 900;
+  margin-bottom: 40px;
+}

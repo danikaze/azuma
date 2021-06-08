@@ -1,0 +1,51 @@
+@use '../../styles/constants/animations.scss' as animations;
+@use '../../styles/constants/breakpoints.scss' as breakpoints;
+
+.root {
+  position: relative;
+  overflow: hidden;
+  height: 300px;
+  background-size: cover;
+}
+
+.messages {
+  color: #ffff00;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 18px;
+  max-width: 80%;
+}
+
+.dark {
+  position: absolute;
+  bottom: 0;
+  background: rgba($color: #000000, $alpha: 0.5);
+  width: 100%;
+  height: 70%;
+}
+
+.logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  height: 40%;
+}
+
+.pj {
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  height: 90%;
+  opacity: 0;
+  transition: opacity animations.$responsive-duration;
+}
+
+@media (max-width: breakpoints.$sm-max) {
+}
+
+@media (min-width: breakpoints.$lg-min) {
+  .pj {
+    opacity: 1;
+  }
+}

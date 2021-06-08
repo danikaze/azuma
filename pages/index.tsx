@@ -1,7 +1,8 @@
+import { IndexPage } from '@components/pages/index';
 import { AppPage } from './_app';
 
 const IndexPageHandler: AppPage = () => {
-  return <div>Index Page</div>;
+  return <IndexPage />;
 };
 
 IndexPageHandler.defaultProps = {

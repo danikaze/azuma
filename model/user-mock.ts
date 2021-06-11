@@ -1,4 +1,4 @@
-import { encryptPasswordSync } from '../utils/crypt';
+import { encryptPasswordSync } from '@utils/crypt';
 import { User, LocalUser, TwitterUser } from './user';
 
 /*

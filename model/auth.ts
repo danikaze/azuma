@@ -1,5 +1,5 @@
 import { Profile } from 'passport';
-import { encryptPassword } from '../utils/crypt';
+import { encryptPassword } from '@utils/crypt';
 import { User, UserAuthData } from './user';
 import { LocalUserDB, TwitterUserDB, UserDB } from './user-mock';
 

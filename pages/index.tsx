@@ -1,5 +1,5 @@
 import { IndexPage } from '@components/pages/index';
-import { AppPage } from './_app';
+import { AppPage } from '@_app';
 
 const IndexPageHandler: AppPage = () => {
   return <IndexPage />;

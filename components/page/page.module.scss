@@ -22,7 +22,6 @@
   width: 100%;
   max-width: 1920px;
   align-self: center;
-  transition: padding animations.$responsive-duration;
 }
 
 @media (min-width: breakpoints.$md-min) {

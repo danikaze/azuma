@@ -1,13 +1,12 @@
 import { FC } from 'react';
 import { Page } from '@components/page';
 
-import styles from './index.module.scss';
-
 export type Props = {};
 
 export const IndexPage: FC<Props> = ({}) => {
   return (
     <Page
+      activePage="index"
       title="Index"
       description="Description"
       header="Welcome to Azuma League"

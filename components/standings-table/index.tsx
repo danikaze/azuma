@@ -5,6 +5,7 @@ import { PLAYOFF_TEAMS } from '@utils/constants/game';
 import { LinkToTeam } from '@components/links/link-to-team';
 
 import styles from './standings-table.module.scss';
+import { getTeamImageUrl } from '@model/team';
 
 export interface Props {
   className?: string;
@@ -20,6 +21,7 @@ export const StandingsTable: FC<Props> = ({ className, standings }) => {
             <th className={styles.colType}>&nbsp;</th>
             <th className={styles.colPos}>Pos</th>
             <th className={styles.colTeam}>Team</th>
+            <th className={styles.colMatches}>Matches</th>
             <th className={styles.colWins}>Wins</th>
             <th className={styles.colLosses}>Losses</th>
             <th className={styles.colPpg}>PPG</th>
@@ -50,7 +52,11 @@ function renderStandings(standings: StandingTeamData[]): JSX.Element[] {
       <tr key={team.teamId}>
         <td className={colTypeClases}>&nbsp;</td>
         <td>{team.pos}</td>
-        <td className={styles.colTeam}>{teamName}</td>
+        <td className={styles.colTeam}>
+          <img src={getTeamImageUrl(team)} />
+          {teamName}
+        </td>
+        <td>{team.wins + team.losses}</td>
         <td>{team.wins}</td>
         <td>{team.losses}</td>
         <td>{team.ppg.toFixed(2)}</td>

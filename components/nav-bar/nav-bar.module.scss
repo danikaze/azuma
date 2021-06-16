@@ -1,14 +1,18 @@
 @use '../../styles/constants/breakpoints.scss' as breakpoints;
+@use '../../styles/constants/z-index.scss' as zIndex;
 
 .root {
-  color: white;
+  background-color: white;
   display: flex;
   justify-content: center;
+  position: sticky;
+  top: 0;
   border-bottom: 3px solid #eeeeee;
   color: #c7c7c7;
   font-size: 18px;
   font-weight: 700;
   text-transform: uppercase;
+  z-index: zIndex.$navBar;
 
   a {
     display: inline-block;

@@ -1,7 +1,8 @@
-import { StandingTeamData } from '@model/standing/interfaces';
-import { PLAYOFF_TEAMS } from '@utils/constants/game';
 import clsx from 'clsx';
 import { FC } from 'react';
+import { StandingTeamData } from '@model/standing/interfaces';
+import { PLAYOFF_TEAMS } from '@utils/constants/game';
+import { LinkToTeam } from '@components/links/link-to-team';
 
 import styles from './standings-table.module.scss';
 
@@ -39,12 +40,17 @@ function renderStandings(standings: StandingTeamData[]): JSX.Element[] {
       team.pos <= PLAYOFF_TEAMS && styles.playoffs,
       team.pos === standings.length && styles.danger
     );
+    const teamName = (
+      <LinkToTeam team={{ teamId: team.teamId, name: team.name }}>
+        {team.name}
+      </LinkToTeam>
+    );
 
     return (
       <tr key={team.teamId}>
         <td className={colTypeClases}>&nbsp;</td>
         <td>{team.pos}</td>
-        <td className={styles.colTeam}>{team.name}</td>
+        <td className={styles.colTeam}>{teamName}</td>
         <td>{team.wins}</td>
         <td>{team.losses}</td>
         <td>{team.ppg.toFixed(2)}</td>

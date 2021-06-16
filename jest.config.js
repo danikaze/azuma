@@ -28,7 +28,7 @@ module.exports = {
       tsconfig: 'tsconfig.json',
     },
   },
-  setupFilesAfterEnv: [],
+  setupFilesAfterEnv: ['jest-expect-message'],
   collectCoverage: true,
   coverageDirectory: '<rootDir>/.coverage',
   coverageReporters: ['json', 'lcov', 'text', 'text-summary'],

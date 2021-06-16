@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import Head from 'next/head';
 import { PRODUCT_NAME } from '@utils/constants';
 import { Header } from '@components/header';
@@ -16,6 +16,8 @@ export interface Props {
   activePage: PageType;
   /** Header at the top of the page */
   header?: string;
+  /** Header to put "outside of the page" */
+  externalHeader?: ReactNode;
 }
 
 export const Page: FC<Props> = ({
@@ -24,6 +26,7 @@ export const Page: FC<Props> = ({
   description,
   header,
   children,
+  externalHeader,
 }) => {
   const headerElem = header ? (
     <h2 className={styles.title}>{header}</h2>
@@ -41,6 +44,7 @@ export const Page: FC<Props> = ({
       <div className={styles.root}>
         <Header className={styles.header} />
         <NavBar active={activePage} />
+        {externalHeader}
         <main className={styles.main}>
           {headerElem}
           {children}

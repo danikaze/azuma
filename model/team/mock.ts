@@ -1,5 +1,5 @@
 import { getTimestamp, TimestampData } from '@model';
-import { LEAGUE_TEAMS } from '@utils/constants/game';
+import { LEAGUE_TEAMS, TeamsPerLeague } from '@utils/constants/game';
 import { mockPlayers } from '@model/player/mock';
 import { Team } from './interfaces';
 
@@ -10,6 +10,20 @@ export const mockTeams = (() => {
   const time = getTimestamp();
   let n = 0;
 
+  const fixedData: Tuple<
+    Pick<Team, 'name' | 'bgColor' | 'fgColor'>,
+    TeamsPerLeague
+  > = [
+    { name: 'The Green 0', bgColor: '#1d9a4c', fgColor: '#ffffff' },
+    { name: 'Mega Team 1', bgColor: '#9a1d1d', fgColor: '#ffffff' },
+    { name: 'Black Panthers 2', bgColor: '#002d64', fgColor: '#509cf9' },
+    { name: 'Space Stars 3', bgColor: '#00387d', fgColor: '#9df7ff' },
+    { name: `80's Kids 4`, bgColor: '#9e00c5', fgColor: '#fffc00' },
+    { name: 'Lighting Spark 5', bgColor: '#172cce', fgColor: '#fffc00' },
+    { name: 'Color Twirl 6', bgColor: '#202020', fgColor: '#ffffff' },
+    { name: 'Spartans 7', bgColor: '#151618', fgColor: '#ffffff' },
+  ];
+
   for (let t = 0; t < LEAGUE_TEAMS; t++) {
     const timestamp: TimestampData = {
       createdAt: time + n,
@@ -19,11 +33,9 @@ export const mockTeams = (() => {
     n++;
     teams.push({
       teamId: `mock-team-${t}`,
-      name: `Team ${t}`,
       image: `team-${t}-logo.png`,
-      bgColor: '',
-      fgColor: '',
       players: mockPlayers.slice(t * playersPerTeam, (t + 1) * playersPerTeam),
+      ...fixedData[t],
       pos: 0,
       wins: 0,
       losses: 0,

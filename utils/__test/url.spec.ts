@@ -1,5 +1,5 @@
 import 'jest';
-import { addUrlParam, addUrlParams } from '../url';
+import { addUrlParam, addUrlParams, createUrlSlug } from '../url';
 
 describe('addUrlParam', () => {
   it('should treat corner cases for parameters', () => {
@@ -41,5 +41,13 @@ describe('addUrlParams', () => {
     const result = addUrlParams('/url/base?foo=bar', { a: 'b', n: 123 });
     const expected = '/url/base?foo=bar&a=b&n=123';
     expect(result).toBe(expected);
+  });
+});
+
+describe('createUrlSlug', () => {
+  it('should create slug from text', () => {
+    expect(createUrlSlug('')).toBe('');
+    expect(createUrlSlug('same-as-slug-text')).toBe('same-as-slug-text');
+    expect(createUrlSlug('Normalize text')).toBe('normalize-text');
   });
 });

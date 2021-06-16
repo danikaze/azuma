@@ -3,7 +3,15 @@ import { Team } from '@model/team/interfaces';
 
 export type StandingTeamData = Pick<
   Team,
-  'teamId' | 'name' | 'pos' | 'wins' | 'losses' | 'gb' | 'ppg' | 'oppg'
+  | 'teamId'
+  | 'name'
+  | 'image'
+  | 'pos'
+  | 'wins'
+  | 'losses'
+  | 'gb'
+  | 'ppg'
+  | 'oppg'
 >;
 
 export interface Standing extends TimestampData {

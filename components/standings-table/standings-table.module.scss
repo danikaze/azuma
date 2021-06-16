@@ -39,7 +39,14 @@ $dangerColor: #d60000;
     max-width: 50px;
   }
   .colTeam {
+    display: flex;
+    align-items: center;
     text-align: left;
+
+    img {
+      height: 20px;
+      margin-right: 10px;
+    }
   }
   // .colWins {
   // }

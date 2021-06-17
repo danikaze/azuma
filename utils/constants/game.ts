@@ -8,6 +8,7 @@ export const TEAM_PLAYERS: PlayersPerTeam = 7;
 export const LEAGUE_TEAMS: TeamsPerLeague = 8;
 // tslint:enable: no-unnecessary-type-annotation
 export const PLAYOFF_TEAMS = 4;
+export const DROP_TEAMS = 1;
 export const MATCH_PERIODS = 2;
 export const MATCH_PERIOD_SECONDS = 1800;
 export const MATCH_BREAK_SECONDS = 600;

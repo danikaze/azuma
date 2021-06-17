@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { FC } from 'react';
 import { Player } from '@model/player/interfaces';
+import { Table, TableColumn, TableRow } from '@components/table';
 
 import styles from './roster.module.scss';
 
@@ -9,44 +10,30 @@ export interface Props {
   className?: string;
 }
 
+const columns: TableColumn[] = [
+  { key: 'fullName', label: 'Player', className: styles.colName },
+  { key: 'number', label: '#' },
+  { key: 'position', label: 'Pos' },
+  { key: 'height', label: 'Height' },
+  { key: 'weight', label: 'Weight' },
+];
+
 export const Roster: FC<Props> = ({ className, players }) => {
   return (
-    <div className={styles.root}>
+    <div className={clsx(styles.root, className)}>
       <h3>Roster</h3>
-      <table className={clsx(className, styles.list)}>
-        {renderHeader()}
-        {renderPlayers(players)}
-      </table>
+      <Table columns={columns} rows={getRows(players)} keyCol="playerId" />
     </div>
   );
 };
 
-function renderHeader(): JSX.Element {
-  return (
-    <thead>
-      <tr>
-        <td className={styles.colName}>Player</td>
-        <td>#</td>
-        <td>Pos</td>
-        <td>Height</td>
-        <td>Weight</td>
-      </tr>
-    </thead>
-  );
-}
-
-function renderPlayers(players: Player[]): JSX.Element {
-  const playerList = players.map((player) => (
-    <tr key={player.playerId}>
-      <td className={styles.colName}>
-        {player.name} {player.surname}
-      </td>
-      <td>{player.number}</td>
-      <td>{player.position}</td>
-      <td>{player.height} cm</td>
-      <td>{player.weight} kg</td>
-    </tr>
-  ));
-
-  return <tbody>{playerList}</tbody>;
+function getRows(players: Player[]): TableRow<string, 'playerId'>[] {
+  return players.map((player) => ({
+    playerId: player.playerId,
+    number: player.number,
+    position: player.position,
+    fullName: `${player.name} ${player.surname}`,
+    height: `${player.height} cm`,
+    weight: `${player.weight} kg`,
+  }));
 }

@@ -1,0 +1,37 @@
+@use '@styles/constants/breakpoints.scss' as breakpoints;
+
+.root {
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    border-bottom: 1px solid rgb(25, 0, 48);
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  thead tr {
+    background: rgb(25, 0, 48);
+    color: rgb(228, 228, 228);
+  }
+
+  th,
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+
+  tr {
+    border-bottom: 1px solid #efefef;
+
+    &:not(thead tr):hover {
+      background: #fef7ff;
+    }
+  }
+
+  .colName {
+    text-align: left;
+  }
+}

@@ -17,7 +17,7 @@ export const StandingsTable: FC<Props> = ({ className, standings }) => {
     <div className={clsx(className, styles.standings)}>
       <table>
         <thead>
-          <tr className={styles.header}>
+          <tr>
             <th className={styles.colType}>&nbsp;</th>
             <th className={styles.colPos}>Pos</th>
             <th className={styles.colTeam}>Team</th>

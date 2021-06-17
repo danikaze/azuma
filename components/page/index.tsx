@@ -28,9 +28,7 @@ export const Page: FC<Props> = ({
   children,
   externalHeader,
 }) => {
-  const headerElem = header ? (
-    <h2 className={styles.title}>{header}</h2>
-  ) : undefined;
+  const headerElem = header ? <h1>{header}</h1> : undefined;
 
   return (
     <>

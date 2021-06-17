@@ -23,10 +23,10 @@ export const TeamHeader: FC<Props> = ({ className, team }) => {
     <div className={clsx(className, styles.container)} style={headerStyle}>
       <div className={styles.logoBg} style={logoStyle} />
       <div className={styles.data}>
-        <h2 className={styles.title}>
+        <h1 className={styles.title}>
           <div className={styles.logoTitle} style={logoStyle} />
           {team.name}
-        </h2>
+        </h1>
         <ul className={styles.stats}>
           {renderOneStat('Position', `#${team.pos}`)}
           {renderOneStat('PPG', team.ppg.toFixed(2))}

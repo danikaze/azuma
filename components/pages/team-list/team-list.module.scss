@@ -1,0 +1,19 @@
+@use '@styles/constants/breakpoints.scss' as breakpoints;
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+
+  li {
+    margin: 10px auto;
+    width: 30%;
+  }
+}
+
+@media (min-width: breakpoints.$xl-min) {
+  .list {
+    li {
+      width: 21%;
+    }
+  }
+}

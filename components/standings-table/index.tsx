@@ -1,69 +1,69 @@
 import clsx from 'clsx';
 import { FC } from 'react';
 import { StandingTeamData } from '@model/standing/interfaces';
-import { PLAYOFF_TEAMS } from '@utils/constants/game';
+import { getTeamImageUrl } from '@model/team';
+import { DROP_TEAMS, LEAGUE_TEAMS, PLAYOFF_TEAMS } from '@utils/constants/game';
 import { LinkToTeam } from '@components/links/link-to-team';
+import { Table, TableColumn, TableRow } from '@components/table';
 
 import styles from './standings-table.module.scss';
-import { getTeamImageUrl } from '@model/team';
 
 export interface Props {
   className?: string;
   standings: StandingTeamData[];
 }
 
+const columns: TableColumn[] = [
+  { key: 'rowType', className: styles.colType },
+  { key: 'pos', label: 'Pos', className: styles.colPos },
+  { key: 'teamName', label: 'Team', className: styles.colTeam },
+  { key: 'matches', label: 'Matches' },
+  { key: 'wins', label: 'Wins' },
+  { key: 'losses', label: 'Losses' },
+  { key: 'ppg', label: 'PPG' },
+  { key: 'oppg', label: 'OPPG' },
+];
+
 export const StandingsTable: FC<Props> = ({ className, standings }) => {
   return (
     <div className={clsx(className, styles.standings)}>
-      <table>
-        <thead>
-          <tr>
-            <th className={styles.colType}>&nbsp;</th>
-            <th className={styles.colPos}>Pos</th>
-            <th className={styles.colTeam}>Team</th>
-            <th className={styles.colMatches}>Matches</th>
-            <th className={styles.colWins}>Wins</th>
-            <th className={styles.colLosses}>Losses</th>
-            <th className={styles.colPpg}>PPG</th>
-            <th className={styles.colOppg}>OPPG</th>
-          </tr>
-        </thead>
-        <tbody>{renderStandings(standings)}</tbody>
-      </table>
+      <Table columns={columns} rows={getRows(standings)} keyCol="teamId" />
       {renderLegend()}
     </div>
   );
 };
 
-function renderStandings(standings: StandingTeamData[]): JSX.Element[] {
-  return standings.map((team) => {
-    const colTypeClases = clsx(
-      styles.colType,
-      team.pos <= PLAYOFF_TEAMS && styles.playoffs,
-      team.pos === standings.length && styles.danger
-    );
-    const teamName = (
-      <LinkToTeam team={{ teamId: team.teamId, name: team.name }}>
-        {team.name}
-      </LinkToTeam>
-    );
+function getRows(
+  standings: readonly StandingTeamData[]
+): TableRow<string, 'teamId'>[] {
+  return standings.map((team) => ({
+    teamId: team.teamId,
+    rowType: renderRowType(team.pos),
+    pos: team.pos,
+    teamName: (
+      <>
+        <img src={getTeamImageUrl(team)} />
+        <LinkToTeam team={{ teamId: team.teamId, name: team.name }}>
+          {team.name}
+        </LinkToTeam>
+      </>
+    ),
+    matches: team.wins + team.losses,
+    wins: team.wins,
+    losses: team.losses,
+    ppg: team.ppg.toFixed(2),
+    oppg: team.oppg.toFixed(2),
+  }));
+}
 
-    return (
-      <tr key={team.teamId}>
-        <td className={colTypeClases}>&nbsp;</td>
-        <td>{team.pos}</td>
-        <td className={styles.colTeam}>
-          <img src={getTeamImageUrl(team)} />
-          {teamName}
-        </td>
-        <td>{team.wins + team.losses}</td>
-        <td>{team.wins}</td>
-        <td>{team.losses}</td>
-        <td>{team.ppg.toFixed(2)}</td>
-        <td>{team.oppg.toFixed(2)}</td>
-      </tr>
-    );
-  });
+function renderRowType(position: number): JSX.Element {
+  const classes = clsx(
+    styles.cellType,
+    position <= PLAYOFF_TEAMS && styles.playoffs,
+    position > LEAGUE_TEAMS - DROP_TEAMS && styles.drop
+  );
+
+  return <div className={classes} />;
 }
 
 function renderLegend(): JSX.Element {

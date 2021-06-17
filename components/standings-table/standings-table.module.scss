@@ -1,61 +1,35 @@
 $playoffsColor: #2ad200;
 $dangerColor: #d60000;
 
-.standings {
-  table {
-    width: 100%;
-  }
+.cellType {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.colType {
+  position: relative;
+  width: 3px;
+  padding: 0 !important;
+}
+.playoffs {
+  background: $playoffsColor;
+}
+.drop {
+  background: $dangerColor;
+}
 
-  thead tr {
-    background: rgb(25, 0, 48);
-    color: rgb(228, 228, 228);
-  }
-  th,
-  td {
-    padding: 10px;
-    text-align: center;
-  }
+.colPos {
+  max-width: 50px;
+}
+.colTeam {
+  display: flex;
+  align-items: center;
+  text-align: left;
 
-  tr {
-    border-bottom: 1px solid #efefef;
-
-    &:not(thead tr):hover {
-      background: #fef7ff;
-    }
+  img {
+    height: 20px;
+    margin-right: 10px;
   }
-
-  .colType {
-    width: 3px;
-    padding: 0;
-  }
-  .playoffs {
-    background: $playoffsColor;
-  }
-  .danger {
-    background: $dangerColor;
-  }
-
-  .colPos {
-    max-width: 50px;
-  }
-  .colTeam {
-    display: flex;
-    align-items: center;
-    text-align: left;
-
-    img {
-      height: 20px;
-      margin-right: 10px;
-    }
-  }
-  // .colWins {
-  // }
-  // .colLosses {
-  // }
-  // .colPpg {
-  // }
-  // .colOppg {
-  // }
 }
 
 .legend {

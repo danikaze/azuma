@@ -21,7 +21,7 @@ const columns: TableColumn[] = [
 export const Roster: FC<Props> = ({ className, players }) => {
   return (
     <div className={clsx(styles.root, className)}>
-      <h3>Roster</h3>
+      <h2>Roster</h2>
       <Table columns={columns} rows={getRows(players)} keyCol="playerId" />
     </div>
   );

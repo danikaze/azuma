@@ -1,12 +1,7 @@
 @use '@styles/constants/breakpoints.scss' as breakpoints;
 
 .root {
-  h3 {
-    font-size: 20px;
-    font-weight: 700;
-    border-bottom: 1px solid rgb(25, 0, 48);
-    margin-bottom: 20px;
-  }
+  margin-top: 30px;
 
   .colName {
     text-align: left;

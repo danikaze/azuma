@@ -19,6 +19,19 @@ a {
   box-sizing: border-box;
 }
 
+h1 {
+  font-size: 24px;
+  font-weight: 900;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  border-bottom: 1px solid rgb(25, 0, 48);
+  margin-bottom: 20px;
+}
+
 #__next {
   height: 100%;
   margin: 0;

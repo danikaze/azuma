@@ -1,15 +1,17 @@
 import { FC } from 'react';
+import { Match } from '@model/match/interfaces';
+import { Team } from '@model/team/interfaces';
 import { Page } from '@components/page';
 import { TeamHeader } from '@components/team-header';
-
-import { Team } from '@model/team/interfaces';
+import { UpcomingMatches } from '@components/upcoming-matches';
 import { Roster } from '@components/roster';
 
 export type Props = {
   team: Team;
+  upcomingMatches: Match[];
 };
 
-export const TeamPage: FC<Props> = ({ team }) => {
+export const TeamPage: FC<Props> = ({ team, upcomingMatches }) => {
   const header = <TeamHeader team={team} />;
 
   return (
@@ -19,6 +21,7 @@ export const TeamPage: FC<Props> = ({ team }) => {
       description="Azuma League team description"
       externalHeader={header}
     >
+      <UpcomingMatches matches={upcomingMatches} />
       <Roster players={team.players} />
     </Page>
   );

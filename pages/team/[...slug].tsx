@@ -1,9 +1,11 @@
 import { AppPage, GetServerSideProps } from '@_app';
 import { TeamPage, Props } from '@components/pages/team';
 import { mockTeams } from '@model/team/mock';
+import { mockMatches } from '@model/match/mock';
+import { TEAM_UPCOMING_MATCHES_SHOWN } from '@utils/constants/ui';
 
-const TeamPageHandler: AppPage<Props> = ({ team }) => {
-  return <TeamPage team={team} />;
+const TeamPageHandler: AppPage<Props> = (props) => {
+  return <TeamPage {...props} />;
 };
 
 TeamPageHandler.defaultProps = {
@@ -26,9 +28,18 @@ export const getServerSideProps: GetServerSideProps<Props, Query> = async (
     };
   }
 
+  const upcomingMatches = mockMatches
+    .filter(
+      (match) =>
+        (match.state === 'pending' || match.state === 'playing') &&
+        (match.homeTeam.teamId === teamId || match.awayTeam.teamId === teamId)
+    )
+    .slice(0, TEAM_UPCOMING_MATCHES_SHOWN);
+
   return {
     props: {
       team,
+      upcomingMatches,
     },
   };
 };

@@ -1,0 +1,44 @@
+.root {
+  margin-top: 30px;
+
+  ul {
+    display: flex;
+  }
+
+  li {
+    padding: 10px 20px 0 20px;
+    min-width: 180px;
+    border-right: 1px solid #e3e3e3;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+}
+
+.date,
+.playing {
+  text-transform: uppercase;
+  font-size: small;
+  margin-bottom: 10px;
+}
+
+.playing {
+  color: red;
+
+  &::before {
+    content: '● ';
+  }
+}
+
+.homeTeam,
+.awayTeam {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+
+  img {
+    height: 25px;
+    margin-right: 10px;
+  }
+}

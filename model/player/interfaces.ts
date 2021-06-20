@@ -1,4 +1,5 @@
 import { PublicId, TimestampData } from '@model';
+import { Team } from '@model/team/interfaces';
 import { PLAYER_POSITIONS, PLAYER_SKILLS } from './constants';
 
 export interface Player extends TimestampData {
@@ -28,6 +29,9 @@ export interface Player extends TimestampData {
 
   /** List of altered status */
   states: PlayerAlteredState[];
+
+  /** Current team */
+  teamId?: Team['teamId'];
 }
 
 export type DominantHand = 'left' | 'right' | 'both';

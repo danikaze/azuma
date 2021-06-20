@@ -7,6 +7,8 @@ export interface Team extends TimestampData {
 
   /** Name of the team */
   name: string;
+  /** Short name (3 letters) of the team */
+  shortName: string;
   /** Team logo image basename */
   image: string;
   /** Color to be used for logos or texts of the team */

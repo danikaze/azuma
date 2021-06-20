@@ -4,6 +4,7 @@ import { Player } from '@model/player/interfaces';
 import { Table, TableColumn, TableRow } from '@components/table';
 
 import styles from './roster.module.scss';
+import { LinkToPlayer } from '@components/links/link-to-player';
 
 export interface Props {
   players: Player[];
@@ -32,7 +33,7 @@ function getRows(players: Player[]): TableRow<string, 'playerId'>[] {
     playerId: player.playerId,
     number: player.number,
     position: player.position,
-    fullName: `${player.name} ${player.surname}`,
+    fullName: <LinkToPlayer player={player} />,
     height: `${player.height} cm`,
     weight: `${player.weight} kg`,
   }));

@@ -1,0 +1,25 @@
+.colName {
+  text-align: left !important;
+}
+
+.filter {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+
+  select,
+  input {
+    margin-right: 10px;
+  }
+}
+
+.pagination {
+  display: flex;
+}
+
+.prevPage,
+.nextPage {
+  cursor: pointer;
+  margin: 0 10px;
+  user-select: none;
+}

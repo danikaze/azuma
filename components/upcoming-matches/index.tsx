@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import { Match, MatchState } from '@model/match/interfaces';
 import { getTeamImageUrl } from '@model/team';
+import { LinkToMatch } from '@components/links/link-to-match';
 
 import styles from './upcoming-matches.module.scss';
 
@@ -24,17 +25,19 @@ export const UpcomingMatches: FC<Props> = ({ className, matches }) => {
 
 function renderMatchInfo(match: Match): JSX.Element {
   return (
-    <li key={match.matchId}>
-      {renderDate(match.state, match.timestamp)}
-      <div className={styles.homeTeam}>
-        <img src={getTeamImageUrl(match.homeTeam)} />
-        {match.homeTeam.name}
-      </div>
-      <div className={styles.awayTeam}>
-        <img src={getTeamImageUrl(match.awayTeam)} />
-        {match.awayTeam.name}
-      </div>
-    </li>
+    <LinkToMatch match={match}>
+      <li key={match.matchId}>
+        {renderDate(match.state, match.timestamp)}
+        <div className={styles.homeTeam}>
+          <img src={getTeamImageUrl(match.homeTeam)} />
+          {match.homeTeam.name}
+        </div>
+        <div className={styles.awayTeam}>
+          <img src={getTeamImageUrl(match.awayTeam)} />
+          {match.awayTeam.name}
+        </div>
+      </li>
+    </LinkToMatch>
   );
 }
 

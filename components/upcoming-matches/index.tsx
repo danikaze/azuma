@@ -1,11 +1,9 @@
 import clsx from 'clsx';
 import { FC } from 'react';
-import { Match, MatchState } from '@model/match/interfaces';
-import { getTeamImageUrl } from '@model/team';
-import { LinkToMatch } from '@components/links/link-to-match';
+import { Match } from '@model/match/interfaces';
+import { MatchSummary } from '@components/match-summary';
 
 import styles from './upcoming-matches.module.scss';
-import { Jikan } from '@utils/jikan';
 
 export interface Props {
   matches: Match[];
@@ -14,7 +12,11 @@ export interface Props {
 
 export const UpcomingMatches: FC<Props> = ({ className, matches }) => {
   if (matches.length === 0) return null;
-  const matchList = matches.map(renderMatchInfo);
+  const matchList = matches.map((match) => (
+    <li key={match.matchId}>
+      <MatchSummary match={match} />
+    </li>
+  ));
 
   return (
     <div className={clsx(styles.root, className)}>
@@ -23,32 +25,3 @@ export const UpcomingMatches: FC<Props> = ({ className, matches }) => {
     </div>
   );
 };
-
-function renderMatchInfo(match: Match): JSX.Element {
-  return (
-    <li key={match.matchId}>
-      <LinkToMatch match={match}>
-        {renderDate(match.state, match.timestamp)}
-        <div className={styles.homeTeam}>
-          <img src={getTeamImageUrl(match.homeTeam)} />
-          {match.homeTeam.name}
-        </div>
-        <div className={styles.awayTeam}>
-          <img src={getTeamImageUrl(match.awayTeam)} />
-          {match.awayTeam.name}
-        </div>
-      </LinkToMatch>
-    </li>
-  );
-}
-
-function renderDate(state: MatchState, timestamp: number): JSX.Element {
-  if (state === 'pending') {
-    return (
-      <div className={styles.date}>
-        {new Jikan(timestamp * 1000).format('MMM/DD HH:mm')}
-      </div>
-    );
-  }
-  return <div className={styles.playing}>Playing LIVE!</div>;
-}

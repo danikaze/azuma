@@ -1,0 +1,40 @@
+.date,
+.finished,
+.playing {
+  text-transform: uppercase;
+  font-size: small;
+  margin-bottom: 10px;
+}
+
+.finished {
+  display: flex;
+  justify-content: space-between;
+
+  color: #c7c7c7;
+}
+
+.playing {
+  color: red;
+
+  &::before {
+    content: '● ';
+  }
+}
+
+.homeTeam,
+.awayTeam {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+
+  img {
+    height: 25px;
+    margin-right: 10px;
+  }
+}
+
+.teamName {
+  display: flex;
+  align-items: center;
+}

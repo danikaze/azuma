@@ -1,5 +1,6 @@
 import { getTimestamp, TimestampData } from '@model';
 import { LEAGUE_TEAMS, TEAM_PLAYERS } from '@utils/constants/game';
+import { generateName } from '@utils/name-generator.ts';
 import { Rng } from '@utils/rng';
 import { WeightedOptions } from '@utils/rng/weighted-options';
 import { PLAYER_POSITIONS, PLAYER_SKILLS } from './constants';
@@ -31,10 +32,11 @@ export const mockPlayers = (() => {
     };
 
     n++;
+    const genre = rng.bool() ? 'm' : 'f';
     players.push({
+      genre,
+      ...generateName({ genre }),
       playerId: `mock-player-${p}`,
-      name: `Player ${p}`,
-      surname: `Surname ${p}`,
       height: rng.integer(160, 220),
       weight: rng.integer(60, 120),
       dominantHand: dominantHand.pick(rng)!,

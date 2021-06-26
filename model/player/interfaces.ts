@@ -6,14 +6,12 @@ export interface Player extends TimestampData {
   /** Unique ID of the Player */
   playerId: PublicId;
 
+  /** Genre */
+  genre: PlayerGenre;
   /** Name in romaji/English */
   name: string;
   /** Surname in romaji/English */
   surname: string;
-  /** Name in the original language (only if it's not romaji) */
-  nativeName?: string;
-  /** Surname in the original language (only if it's not romaji) */
-  nativeSurname?: string;
 
   /** Height in cm */
   height: number;
@@ -34,6 +32,7 @@ export interface Player extends TimestampData {
   teamId?: Team['teamId'];
 }
 
+export type PlayerGenre = 'm' | 'f';
 export type DominantHand = 'left' | 'right' | 'both';
 export type AlteredStatus = 'dead' | 'lucky' | 'stunned' | 'blind';
 

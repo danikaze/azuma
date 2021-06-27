@@ -6,13 +6,10 @@ import {
   GetServerSidePropsResult,
   NextApiResponse,
 } from 'next';
-import { useSelector } from 'react-redux';
 import { GetServerSideProps } from '@_app';
-import { userSelector } from '@store/model/user/selectors';
 import { ApiHandler, ApiRequest, ApiResponse, HttpStatus } from '@api';
 import { UserAuthData } from '@model/user';
 import { getLogger } from '@utils/logger';
-import { UserState } from '@store/model/user';
 
 export type AuthGetServerSidePropsContext<
   Q extends ParsedUrlQuery = ParsedUrlQuery
@@ -58,13 +55,21 @@ interface AuthApiRequest<Q, B> extends IncomingMessage {
 const logger = getLogger('auth');
 const USER_ROLES = ['user', 'admin'];
 const ADMIN_ROLES = ['admin'];
+let userData: UserAuthData | false;
 
 /**
- * Hook that returns the available user data in the redux store
- * or `null` if undefined
+ * Sets the user data to enable client-side navigation.
+ * Used internally by `_app.tsx`
  */
-export function useUserData(): UserState {
-  return useSelector(userSelector);
+export function setUserData(data: UserAuthData | false): void {
+  userData = data;
+}
+
+/**
+ * Hook that returns the available user data or `false` if not logged in
+ */
+export function useUserData(): UserAuthData | false {
+  return userData;
 }
 
 /**

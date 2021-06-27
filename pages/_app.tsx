@@ -1,7 +1,6 @@
 import { ParsedUrlQuery } from 'querystring';
 import { IncomingMessage } from 'http';
 import React, { FunctionComponent, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import {
   GetServerSidePropsContext as GSSPCtx,
   GetServerSidePropsResult,
@@ -12,11 +11,10 @@ import NextApp, { AppContext, AppProps as NextAppProps } from 'next/app';
 import Head from 'next/head';
 import { store } from '@store';
 import { appWithTranslation } from '@utils/i18n';
-import { useUserData } from '@utils/auth';
+import { setUserData, useUserData } from '@utils/auth';
 import { getLogger, globalLogger, Logger, NsLogger } from '@utils/logger';
 import { theme } from '@themes';
 import { UserAuthData } from '@model/user';
-import { setUser } from '@store/actions/user';
 
 import '@styles/reset-v2.css';
 import '@styles/globals.css';
@@ -136,7 +134,6 @@ export default appWithTranslation(ReduxApp as FunctionComponent<NextAppProps>);
  * requests will just get it from there
  */
 function initUserForClientSideNavigation(pageProps: AppPageProps): void {
-  const dispatch = useDispatch();
   const user = useUserData();
 
   // user data was already in the State which means this is client navigation
@@ -152,6 +149,6 @@ function initUserForClientSideNavigation(pageProps: AppPageProps): void {
   // it was logged in but page is being rendered in server side, therefore we
   // just put it into the state
   if (pageProps.user) {
-    dispatch(setUser(pageProps.user));
+    setUserData(pageProps.user);
   }
 }

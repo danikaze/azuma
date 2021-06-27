@@ -1,5 +1,4 @@
 import { HydrateAction } from './hydrate';
-import { UserAction } from './user';
 
 export interface AppAction {
   type: string;
@@ -11,7 +10,7 @@ export interface AppAction {
 /*
  * List of possible app actions to be defined here
  */
-type AppActionList = UserAction;
+type AppActionList = never;
 
 // the real actions include the Hydrate one, which is internal
 export type Action = HydrateAction | AppActionList;

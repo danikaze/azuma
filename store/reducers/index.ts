@@ -3,11 +3,8 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { State } from '@store/model';
 import { Action } from '@store/actions';
 import { hydrateReducer } from './hydrate';
-import { userReducer } from './user';
 
-const combinedReducer = combineReducers<State, Action>({
-  user: userReducer,
-});
+const combinedReducer = combineReducers<State, Action>({});
 
 export const reducer: Reducer<State, Action> = (state, action) => {
   if (action.type === HYDRATE) {

@@ -9,7 +9,6 @@ import {
 } from 'next';
 import NextApp, { AppContext, AppProps as NextAppProps } from 'next/app';
 import Head from 'next/head';
-import { store } from '@store';
 import { appWithTranslation } from '@utils/i18n';
 import { setUserData, useUserData } from '@utils/auth';
 import { getLogger, globalLogger, Logger, NsLogger } from '@utils/logger';
@@ -92,10 +91,14 @@ const App: FunctionComponent<NextAppProps<AppPageProps>> = ({
  * 2. Apply i18n
  */
 
-const ReduxApp = store.withRedux(App) as WithInitialProps;
+let ExportedApp = App as WithInitialProps;
+
+if (REDUX_ENABLED) {
+  ExportedApp = require('@store').store.withRedux(App) as WithInitialProps;
+}
 
 if (I18N_OPTIMIZED_NAMESPACES_ENABLED || AUTH_ENABLED) {
-  ReduxApp.getInitialProps = async (appContext: AppContext) => {
+  ExportedApp.getInitialProps = async (appContext: AppContext) => {
     const appProps = await NextApp.getInitialProps(appContext);
     const defaultProps = (appContext.Component as AppPage).defaultProps || {};
     const pageProps = {
@@ -124,7 +127,11 @@ if (I18N_OPTIMIZED_NAMESPACES_ENABLED || AUTH_ENABLED) {
   };
 }
 
-export default appWithTranslation(ReduxApp as FunctionComponent<NextAppProps>);
+ExportedApp = appWithTranslation(
+  ExportedApp as FunctionComponent<NextAppProps>
+);
+
+export default ExportedApp;
 
 /**
  * User data from passport only is available when rendering from server side

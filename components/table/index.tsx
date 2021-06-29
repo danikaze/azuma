@@ -26,6 +26,8 @@ export interface Props<C extends string = string, K extends string = string> {
   keyCol?: K;
   /** If `true`, no header will be rendered */
   noHeader?: boolean;
+  /** If `true`, last rows will be on top */
+  reverseRows?: boolean;
   /** Additional classNames to be added */
   className?: string;
 }
@@ -36,11 +38,12 @@ export function Table<C extends string = string, K extends string = string>({
   columns,
   rows,
   keyCol,
+  reverseRows,
 }: Props<C, K>) {
   return (
     <table className={clsx(styles.root, className)}>
       {!noHeader && renderHeader(columns)}
-      {renderBody(columns, rows, keyCol)}
+      {renderBody(columns, rows, keyCol, reverseRows)}
     </table>
   );
 }
@@ -62,8 +65,10 @@ function renderHeader(columns: readonly TableColumn[]): JSX.Element {
 function renderBody<C extends string, K extends string | never>(
   columns: readonly TableColumn<C | K>[],
   rows: readonly TableRow<C, K>[],
-  key: K | undefined
+  key: K | undefined,
+  reverse?: boolean
 ): JSX.Element {
+  const addMethod = reverse ? 'unshift' : 'push';
   const trs: JSX.Element[] = [];
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
@@ -74,7 +79,7 @@ function renderBody<C extends string, K extends string | never>(
     ));
 
     const trKey = key ? row[key] : i;
-    trs.push(<tr key={trKey}>{tds}</tr>);
+    trs[addMethod](<tr key={trKey}>{tds}</tr>);
   }
 
   return <tbody>{trs}</tbody>;

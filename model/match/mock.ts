@@ -1,18 +1,15 @@
 import { getTimestamp } from '@model';
-import { Rng } from '@utils/rng';
-import { GOAL_SCORE, MATCH_FULL_DURATION } from '@utils/constants/game';
+import { MATCH_FULL_DURATION } from '@utils/constants/game';
 import { mockTeams } from '@model/team/mock';
 import { mockCourts } from '@model/court/mock';
 import { Match, MatchState } from './interfaces';
 import { roundRobinMatches } from '@utils/round-robin-matches';
+import { MatchSimulator } from '@utils/match-simulator';
 
 export const mockMatches = (() => {
   const COMPLETED_ROUNDS = 4;
   const TIME_BETWEEN_ROUNDS = 604800; // 86400 * 7;
   const TIME_BETWEEN_MATCHES = 1800;
-  const MIN_GOALS = 0;
-  const MAX_GOALS = 10;
-  const rng = new Rng();
   const now = getTimestamp();
   // current time is just before the start of the middle match of this round
   const firstTime =
@@ -53,11 +50,9 @@ export const mockMatches = (() => {
         updatedAt: state === 'pending' ? firstTime : time,
       };
 
-      if (state === 'finished') {
-        match.homeScore = rng.integer(MIN_GOALS, MAX_GOALS) * GOAL_SCORE;
-        do {
-          match.awayScore = rng.integer(MIN_GOALS, MAX_GOALS) * GOAL_SCORE;
-        } while (match.homeScore === match.awayScore);
+      if (state === 'playing' || state === 'finished') {
+        const simulation = new MatchSimulator(match);
+        Object.assign(match, simulation.run());
       }
 
       matches.push(match);

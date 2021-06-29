@@ -1,6 +1,7 @@
 import { PublicId, TimestampData, TimestampUtc } from '@model';
 import { Court } from '@model/court/interfaces';
 import { Team } from '@model/team/interfaces';
+import { MatchAction } from '@utils/match-simulator/interfaces';
 
 export type MatchState = 'pending' | 'playing' | 'finished' | 'cancelled';
 
@@ -23,4 +24,7 @@ export interface Match extends TimestampData {
   homeScore?: number;
   /** Final score for the visiting team, if the match was finished */
   awayScore?: number;
+
+  /** List of happened actions per period (only in simulated matches) */
+  log?: MatchAction[][];
 }

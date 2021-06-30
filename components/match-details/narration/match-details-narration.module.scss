@@ -1,0 +1,14 @@
+.root {
+  table {
+    display: block;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+}
+
+.timeCol {
+  width: 100px;
+}
+.actionCol {
+  text-align: left !important;
+}

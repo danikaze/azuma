@@ -3,22 +3,25 @@ import { Page } from '@components/page';
 import { Match } from '@model/match/interfaces';
 import { MatchDetails } from '@components/match-details';
 import { MatchDetailsHeader } from '@components/match-details/header';
+import { useMatch } from './hooks';
 
 export type Props = {
   match: Match;
 };
 
-export const MatchPage: FC<Props> = ({ match }) => {
-  const header = <MatchDetailsHeader match={match} />;
+export const MatchPage: FC<Props> = (props) => {
+  const state = useMatch(props);
+
+  const header = <MatchDetailsHeader match={state} />;
 
   return (
     <Page
-      activePage="players"
-      title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
+      activePage="matches"
+      title={`${state.homeTeam.name} vs ${state.awayTeam.name}`}
       description="Azuma League player description"
       externalHeader={header}
     >
-      <MatchDetails match={match} />
+      <MatchDetails actions={state.actions} match={state} />
     </Page>
   );
 };

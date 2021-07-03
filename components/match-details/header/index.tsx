@@ -9,18 +9,43 @@ export type Props = {
 };
 
 export const MatchDetailsHeader: FC<Props> = ({ match }) => {
+  const separator =
+    match.state === 'finished' ? (
+      <div className={styles.separator}>
+        <div className={styles.separatorFinal}>FINAL</div>
+      </div>
+    ) : (
+      <div className={styles.separator}>
+        <div>-</div>
+      </div>
+    );
+
+  const { homeTeam, awayTeam } = match;
+  const homeTeamStyle = {
+    background: homeTeam.bgColor,
+    color: homeTeam.fgColor,
+  };
+  const awayTeamStyle = {
+    background: awayTeam.bgColor,
+    color: awayTeam.fgColor,
+  };
+
   return (
     <div className={styles.root}>
-      <div className={styles.homeTeam}>
-        <div className={styles.teamName}>{match.homeTeam.name}</div>
-        <img src={getTeamImageUrl(match.homeTeam)} />
+      <div className={styles.homeTeam} style={homeTeamStyle}>
+        <div className={styles.teamName}>
+          <img src={getTeamImageUrl(homeTeam)} />
+          {homeTeam.name}
+        </div>
         <div className={styles.score}>{match.homeScore}</div>
       </div>
-      -
-      <div className={styles.awayTeam}>
+      {separator}
+      <div className={styles.awayTeam} style={awayTeamStyle}>
         <div className={styles.score}>{match.awayScore}</div>
-        <img src={getTeamImageUrl(match.awayTeam)} />
-        <div className={styles.teamName}>{match.awayTeam.name}</div>
+        <div className={styles.teamName}>
+          {awayTeam.name}
+          <img src={getTeamImageUrl(awayTeam)} />
+        </div>
       </div>
     </div>
   );

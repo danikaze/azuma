@@ -1,5 +1,5 @@
 import { AppPage, GetServerSideProps } from '@_app';
-import { TeamPage, Props } from '@components/pages/team';
+import { TeamPage, Props } from '@page-components/team';
 import { mockTeams } from '@model/team/mock';
 import { mockMatches } from '@model/match/mock';
 import { TEAM_UPCOMING_MATCHES_SHOWN } from '@utils/constants/ui';

@@ -1,5 +1,5 @@
 import { AppPage, GetServerSideProps } from '@_app';
-import { MatchListPage, Props } from '@components/pages/match-list';
+import { MatchListPage, Props } from '@page-components/match-list';
 import { mockMatches } from '@model/match/mock';
 import { MatchSimulatorUpdater } from '@utils/match-simulator/match-simulator-updater';
 import { getMilliseconds } from '@utils/jikan';

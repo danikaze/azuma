@@ -1,7 +1,7 @@
 import { AppPage, GetServerSideProps } from '@_app';
 import { mockPlayers } from '@model/player/mock';
-import { PlayerPage, Props } from '@components/pages/player';
 import { mockTeams } from '@model/team/mock';
+import { PlayerPage, Props } from '@page-components/player';
 
 const PlayerPageHandler: AppPage<Props> = (props) => {
   return <PlayerPage {...props} />;

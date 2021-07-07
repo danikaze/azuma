@@ -424,6 +424,7 @@ rules:
       - '@assets'
       - '@components'
       - '@model'
+      - '@page-components'
       - '@store'
       - '@styles'
       - '@test'

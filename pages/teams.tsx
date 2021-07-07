@@ -1,5 +1,5 @@
 import { AppPage, GetServerSideProps } from '@_app';
-import { TeamListPage, Props } from '@components/pages/team-list';
+import { TeamListPage, Props } from '@page-components/team-list';
 import { mockTeams } from '@model/team/mock';
 
 const TeamsPageHandler: AppPage<Props> = ({ teams }) => {

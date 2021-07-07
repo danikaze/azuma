@@ -1,6 +1,6 @@
 import { AppPage, GetServerSideProps } from '@_app';
 import { mockMatches } from '@model/match/mock';
-import { MatchPage, Props } from '@components/pages/match';
+import { MatchPage, Props } from '@page-components/match';
 
 const MatchPageHandler: AppPage<Props> = (props) => {
   return <MatchPage {...props} />;

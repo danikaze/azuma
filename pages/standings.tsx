@@ -1,5 +1,5 @@
 import { AppPage, GetServerSideProps } from '@_app';
-import { StandingsPage, Props } from '@components/pages/standings';
+import { StandingsPage, Props } from '@page-components/standings';
 import { mockStandings } from '@model/standing/mock';
 
 const StandingsPageHandler: AppPage<Props> = ({ standings }) => {

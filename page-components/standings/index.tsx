@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { Page } from '@components/page';
-
 import { StandingsTable } from '@components/standings-table';
 import { StandingTeamData } from '@model/standing/interfaces';
 

@@ -1,12 +1,13 @@
-import { getTimestamp, TimestampData } from '@model';
+import { TimestampData } from '@model';
 import { Team } from '@model/team/interfaces';
 import { mockTeams } from '@model/team/mock';
 import { mockMatches } from '@model/match/mock';
+import { getMilliseconds } from '@utils/jikan';
 import { Standing } from './interfaces';
 
 export const mockStandings = (() => {
   const standings: Standing[] = [];
-  const time = getTimestamp();
+  const time = getMilliseconds();
   const MATCHES_PER_ROUND = mockTeams.length / 2;
   const teamsMap = mockTeams.reduce((teams, team) => {
     teams[team.teamId] = team;

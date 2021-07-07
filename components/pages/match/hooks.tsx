@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Match } from '@model/match/interfaces';
-import { getSeconds } from '@utils/jikan';
+import { getMilliseconds } from '@utils/jikan';
 import { MatchAction } from '@utils/match-simulator/interfaces';
 import { MatchSimulatorUpdater } from '@utils/match-simulator/match-simulator-updater';
 import { Props } from '.';
@@ -40,6 +40,6 @@ function getCurrentState(
   }
 
   const sim = new MatchSimulatorUpdater(match.log);
-  sim.replay(getSeconds() - match.timestamp);
+  sim.replay(getMilliseconds() - match.timestamp);
   return sim.getResult();
 }

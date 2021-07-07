@@ -10,9 +10,8 @@ export const LEAGUE_TEAMS: TeamsPerLeague = 8;
 export const PLAYOFF_TEAMS = 4;
 export const DROP_TEAMS = 1;
 export const MATCH_PERIODS = 2;
-export const MATCH_PERIOD_SECONDS = 1800;
-export const MATCH_BREAK_SECONDS = 600;
-export const MATCH_FULL_DURATION =
-  MATCH_PERIODS * MATCH_PERIOD_SECONDS +
-  (MATCH_PERIODS - 1) * MATCH_BREAK_SECONDS;
+export const MATCH_PERIOD_MS = 1800000;
+export const MATCH_BREAK_MS = 600000;
+export const MATCH_FULL_DURATION_MS =
+  MATCH_PERIODS * MATCH_PERIOD_MS + (MATCH_PERIODS - 1) * MATCH_BREAK_MS;
 export const GOAL_SCORE = 10;

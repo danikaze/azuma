@@ -1,13 +1,14 @@
-import { getTimestamp, TimestampData } from '@model';
-import { LEAGUE_TEAMS, TeamsPerLeague } from '@utils/constants/game';
+import { TimestampData } from '@model';
 import { mockPlayers } from '@model/player/mock';
+import { LEAGUE_TEAMS, TeamsPerLeague } from '@utils/constants/game';
+import { getMilliseconds } from '@utils/jikan';
 import { Team } from './interfaces';
 
 export const mockTeams = (() => {
   const teams: Team[] = [];
 
   const playersPerTeam = Math.floor(mockPlayers.length / LEAGUE_TEAMS);
-  const time = getTimestamp();
+  const time = getMilliseconds();
   let n = 0;
 
   const fixedData: Tuple<

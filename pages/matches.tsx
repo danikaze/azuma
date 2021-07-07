@@ -2,7 +2,7 @@ import { AppPage, GetServerSideProps } from '@_app';
 import { MatchListPage, Props } from '@components/pages/match-list';
 import { mockMatches } from '@model/match/mock';
 import { MatchSimulatorUpdater } from '@utils/match-simulator/match-simulator-updater';
-import { getSeconds } from '@utils/jikan';
+import { getMilliseconds } from '@utils/jikan';
 
 const MatchesPageHandler: AppPage<Props> = (props) => {
   return <MatchListPage {...props} />;
@@ -16,7 +16,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const matches = mockMatches.map((match) => {
     if (match.state !== 'playing') return match;
     const sim = new MatchSimulatorUpdater(match.log);
-    sim.replay(getSeconds() - match.timestamp);
+    sim.replay(getMilliseconds() - match.timestamp);
     const currentStatus = sim.getResult();
 
     return {

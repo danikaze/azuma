@@ -1,7 +1,7 @@
 import {
   GOAL_SCORE,
-  MATCH_BREAK_SECONDS,
-  MATCH_PERIOD_SECONDS,
+  MATCH_BREAK_MS,
+  MATCH_PERIOD_MS,
 } from '@utils/constants/game';
 import { isAction, MatchActionData } from './actions';
 import { MatchAction, MatchTeam } from './interfaces';
@@ -18,10 +18,11 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
 
   private static getActions(
     log: MatchAction[][],
-    elapsedTime?: number
+    ellapsedMs?: number
   ): MatchAction[] {
     const actions: MatchAction[] = [];
-    let playedTime = elapsedTime;
+    const fullPeriodAndBreak = (MATCH_PERIOD_MS + MATCH_BREAK_MS) / 1000;
+    let playedTime = ellapsedMs ? ellapsedMs / 1000 : undefined;
 
     for (const period of log) {
       // no time limit
@@ -31,8 +32,8 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
       }
 
       // full period finished
-      if (playedTime! > MATCH_PERIOD_SECONDS) {
-        playedTime -= MATCH_PERIOD_SECONDS + MATCH_BREAK_SECONDS;
+      if (playedTime! > MATCH_PERIOD_MS) {
+        playedTime -= fullPeriodAndBreak;
         actions.push(...period);
         continue;
       }
@@ -47,16 +48,16 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
         if (playedTime < action.time) break;
         actions.push(action);
       }
-      playedTime -= MATCH_PERIOD_SECONDS + MATCH_BREAK_SECONDS;
+      playedTime -= fullPeriodAndBreak;
     }
 
     return actions;
   }
 
-  public replay(elapsedTime?: number): void {
+  public replay(ellapsedMs?: number): void {
     const log = this.log;
     this.reset();
-    MatchSimulatorUpdater.getActions(log, elapsedTime).forEach((action) =>
+    MatchSimulatorUpdater.getActions(log, ellapsedMs).forEach((action) =>
       this.update(action)
     );
   }

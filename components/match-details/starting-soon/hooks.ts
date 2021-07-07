@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import { getSeconds } from '@utils/jikan';
+import { getMilliseconds } from '@utils/jikan';
 import { Props } from '.';
 import { useRouter } from 'next/router';
 
 interface State {
-  timeToStart: number;
+  msToStart: number;
 }
 
 export function useMatchDetailsStartingSoon({ matchStartTime }: Props) {
   const router = useRouter();
   const [state, setState] = useState<State>({
-    timeToStart: matchStartTime - getSeconds(),
+    msToStart: matchStartTime - getMilliseconds(),
   });
 
   useEffect(() => {
     let interval: number | undefined = window.setInterval(() => {
-      const timeToStart = Math.max(0, matchStartTime - getSeconds());
+      const timeToStart = Math.max(0, matchStartTime - getMilliseconds());
 
       if (timeToStart === 0) {
         clearInterval(interval);
@@ -24,7 +24,7 @@ export function useMatchDetailsStartingSoon({ matchStartTime }: Props) {
 
       setState((state) => ({
         ...state,
-        timeToStart,
+        msToStart: timeToStart,
       }));
     }, 1000);
 
@@ -39,6 +39,6 @@ export function useMatchDetailsStartingSoon({ matchStartTime }: Props) {
 
   return {
     reload,
-    timeToStart: state.timeToStart,
+    msToStart: state.msToStart,
   };
 }

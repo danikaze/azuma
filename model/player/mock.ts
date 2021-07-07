@@ -1,5 +1,6 @@
-import { getTimestamp, TimestampData } from '@model';
+import { TimestampData } from '@model';
 import { LEAGUE_TEAMS, TEAM_PLAYERS } from '@utils/constants/game';
+import { getMilliseconds } from '@utils/jikan';
 import { generateName } from '@utils/name-generator.ts';
 import { Rng } from '@utils/rng';
 import { WeightedOptions } from '@utils/rng/weighted-options';
@@ -17,7 +18,7 @@ export const mockPlayers = (() => {
   ]);
 
   const N_PLAYERS = TEAM_PLAYERS * 2 * LEAGUE_TEAMS;
-  const time = getTimestamp();
+  const time = getMilliseconds();
   let n = 0;
 
   for (let p = 0; p < N_PLAYERS; p++) {

@@ -9,15 +9,15 @@ export type Props = {
 };
 
 export const MatchDetailsStartingSoon: FC<Props> = (props) => {
-  const { reload, timeToStart } = useMatchDetailsStartingSoon(props);
+  const { reload, msToStart } = useMatchDetailsStartingSoon(props);
 
-  return timeToStart > 0 ? renderStartingSoon(timeToStart) : renderLive(reload);
+  return msToStart > 0 ? renderStartingSoon(msToStart) : renderLive(reload);
 };
 
-function renderStartingSoon(timeToStart: number) {
+function renderStartingSoon(msToStart: number) {
   return (
     <div className={styles.root}>
-      The match will start in {formatTime(timeToStart)}...
+      The match will start in {formatTime(msToStart)}...
     </div>
   );
 }
@@ -30,11 +30,11 @@ function renderLive(reload: () => void) {
   );
 }
 
-function formatTime(time: number): string {
+function formatTime(ms: number): string {
   // tslint:disable:no-magic-numbers
-  const hours = Math.floor(time / 3600);
-  const min = String(Math.floor((time % 3600) / 60)).padStart(2, '0');
-  const secs = String(Math.floor(time % 60)).padStart(2, '0');
+  const hours = Math.floor(ms / 3600000);
+  const min = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0');
+  const secs = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
 
   return `${hours > 0 ? `${hours}:` : ''}${min}:${secs}`;
 }

@@ -1,5 +1,5 @@
 import { Match } from '@model/match/interfaces';
-import { MATCH_PERIODS, MATCH_PERIOD_SECONDS } from '@utils/constants/game';
+import { MATCH_PERIODS, MATCH_PERIOD_MS } from '@utils/constants/game';
 import { Rng } from '@utils/rng';
 import { createAction } from './actions';
 import { SimulateMatchResult } from './interfaces';
@@ -23,10 +23,11 @@ export class MatchSimulator extends MatchSimulatorUpdater {
     const minActions = 100;
     const maxActions = 200;
     const goalPercentage = 30;
+    const matchPeriodSecs = MATCH_PERIOD_MS / 1000;
 
     for (let period = 0; period < MATCH_PERIODS; period++) {
       const goalOpportunities = this.rng.integer(minActions, maxActions);
-      const opportunityInterval = MATCH_PERIOD_SECONDS / goalOpportunities;
+      const opportunityInterval = matchPeriodSecs / goalOpportunities;
       let possessionHome = period % 2 === 0;
 
       this.update(
@@ -38,11 +39,11 @@ export class MatchSimulator extends MatchSimulatorUpdater {
       );
 
       let time = opportunityInterval;
-      while (time < MATCH_PERIOD_SECONDS) {
+      while (time < matchPeriodSecs) {
         if (this.rng.bool(goalPercentage)) {
           this.update(
             createAction({
-              time,
+              time: Math.floor(time),
               type: 'Goal',
             })
           );
@@ -54,7 +55,7 @@ export class MatchSimulator extends MatchSimulatorUpdater {
         if (this.rng.bool()) {
           this.update(
             createAction({
-              time,
+              time: Math.floor(time),
               type: 'SwitchPossession',
             })
           );
@@ -65,7 +66,7 @@ export class MatchSimulator extends MatchSimulatorUpdater {
 
       this.update(
         createAction({
-          time: MATCH_PERIOD_SECONDS,
+          time: matchPeriodSecs,
           type: 'PeriodEnd',
         })
       );
@@ -74,7 +75,7 @@ export class MatchSimulator extends MatchSimulatorUpdater {
     if (this.isScoreTied()) {
       this.update(
         createAction({
-          time: MATCH_PERIOD_SECONDS,
+          time: matchPeriodSecs,
           type: 'TieBreak',
           team: this.rng.integer(0, 1) as 0 | 1,
         })

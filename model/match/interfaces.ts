@@ -11,7 +11,7 @@ export interface Match extends TimestampData {
 
   /** State of the match */
   state: MatchState;
-  /** Starting time of the match in the real world */
+  /** Starting time of the match in the real world (ms) */
   timestamp: TimestampUtc;
   /** Court where the match takes place */
   court: Court;

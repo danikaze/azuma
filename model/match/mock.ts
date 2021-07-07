@@ -1,20 +1,20 @@
-import { getTimestamp } from '@model';
-import { MATCH_FULL_DURATION } from '@utils/constants/game';
+import { MATCH_FULL_DURATION_MS } from '@utils/constants/game';
 import { mockTeams } from '@model/team/mock';
 import { mockCourts } from '@model/court/mock';
-import { Match, MatchState } from './interfaces';
 import { roundRobinMatches } from '@utils/round-robin-matches';
 import { MatchSimulator } from '@utils/match-simulator';
+import { getMilliseconds } from '@utils/jikan';
+import { Match, MatchState } from './interfaces';
 
 export const mockMatches = (() => {
   const COMPLETED_ROUNDS = 4;
-  const TIME_BETWEEN_ROUNDS = 604800; // 86400 * 7;
-  const TIME_BETWEEN_MATCHES = 1800;
-  const now = getTimestamp();
+  const TIME_BETWEEN_ROUNDS = 604_800_000; // 86400 * 7 * 1000;
+  const TIME_BETWEEN_MATCHES = 1_800_000; // 30 * 60 * 1000
+  const now = getMilliseconds();
   // current time is just before the start of the middle match of this round
   const firstTime =
     now -
-    ((mockTeams.length / 2) * (MATCH_FULL_DURATION + TIME_BETWEEN_MATCHES)) /
+    ((mockTeams.length / 2) * (MATCH_FULL_DURATION_MS + TIME_BETWEEN_MATCHES)) /
       2 -
     COMPLETED_ROUNDS * TIME_BETWEEN_ROUNDS;
   let time = firstTime;
@@ -31,7 +31,7 @@ export const mockMatches = (() => {
 
     roundMatches.forEach(([homeTeam, awayTeam]) => {
       const matchStartTime = time;
-      const matchEndTime = matchStartTime + MATCH_FULL_DURATION;
+      const matchEndTime = matchStartTime + MATCH_FULL_DURATION_MS;
       const state: MatchState =
         now < matchStartTime
           ? 'pending'
@@ -58,7 +58,7 @@ export const mockMatches = (() => {
       matches.push(match);
 
       n++;
-      time += MATCH_FULL_DURATION + TIME_BETWEEN_MATCHES;
+      time += MATCH_FULL_DURATION_MS + TIME_BETWEEN_MATCHES;
     });
 
     time = roundTime + TIME_BETWEEN_ROUNDS;

@@ -40,19 +40,17 @@ export const MatchSummary: FC<Props> = ({ className, match }) => {
   );
 };
 
-function renderDate(state: MatchState, timestamp: number): JSX.Element {
+function renderDate(state: MatchState, ms: number): JSX.Element {
   if (state === 'pending') {
     return (
-      <div className={styles.date}>
-        {new Jikan(timestamp * 1000).format('MMM/DD HH:mm')}
-      </div>
+      <div className={styles.date}>{new Jikan(ms).format('MMM/DD HH:mm')}</div>
     );
   }
 
   if (state === 'finished') {
     return (
       <div className={styles.finished}>
-        {new Jikan(timestamp * 1000).format('MMM/DD HH:mm')}
+        {new Jikan(ms).format('MMM/DD HH:mm')}
         <div>FINAL</div>
       </div>
     );

@@ -6,10 +6,12 @@ import {
   GetServerSidePropsResult,
   NextApiResponse,
 } from 'next';
-import { GetServerSideProps } from '@_app';
+import { ComponentType, createContext, useContext } from 'react';
+import { AppType, GetServerSideProps } from '@_app';
 import { ApiHandler, ApiRequest, ApiResponse, HttpStatus } from '@api';
 import { UserAuthData } from '@model/user';
 import { getLogger } from '@utils/logger';
+import { AcceptedComponent, wrapApp } from './with-auth';
 
 export type AuthGetServerSidePropsContext<
   Q extends ParsedUrlQuery = ParsedUrlQuery
@@ -55,21 +57,19 @@ interface AuthApiRequest<Q, B> extends IncomingMessage {
 const logger = getLogger('auth');
 const USER_ROLES = ['user', 'admin'];
 const ADMIN_ROLES = ['admin'];
-let userData: UserAuthData | false;
 
-/**
- * Sets the user data to enable client-side navigation.
- * Used internally by `_app.tsx`
- */
-export function setUserData(data: UserAuthData | false): void {
-  userData = data;
-}
+export const Auth = createContext<UserAuthData | false>(false);
+Auth.displayName = 'Auth';
 
 /**
  * Hook that returns the available user data or `false` if not logged in
  */
 export function useUserData(): UserAuthData | false {
-  return userData;
+  return useContext(Auth);
+}
+
+export function appWithAuth(Component: AcceptedComponent) {
+  return wrapApp(Component);
 }
 
 /**

@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { PRODUCT_NAME } from '@utils/constants';
 import { Header } from '@components/header';
 import { NavBar, PageType } from '@components/nav-bar';
+import { UserInfoColumn } from '@components/user-info-column';
 import { Footer } from '@components/footer';
 
 import styles from './page.module.scss';
@@ -43,10 +44,13 @@ export const Page: FC<Props> = ({
         <Header className={styles.header} />
         <NavBar active={activePage} />
         {externalHeader}
-        <main className={styles.main}>
-          {headerElem}
-          {children}
-        </main>
+        <div className={styles.central}>
+          <main className={styles.main}>
+            {headerElem}
+            {children}
+          </main>
+          <UserInfoColumn />
+        </div>
         <Footer className={styles.footer} />
       </div>
     </>

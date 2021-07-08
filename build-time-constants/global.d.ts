@@ -1,9 +1,6 @@
 /*
  * Data from global.js
  */
-/** Example of a value available in the whole application */
-declare const GLOBAL_EXAMPLE: string;
-
 /**
  * If true, Redux will be available (store will be setup)
  * Leave `false` if not needed for the project

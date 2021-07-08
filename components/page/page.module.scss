@@ -12,17 +12,26 @@
   margin: 0 auto;
 }
 
+.central {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  padding: 20px 0;
+}
+
 .main {
   flex-grow: 1;
-  padding: 20px 0;
   margin: 0;
   width: 100%;
   max-width: 1920px;
-  align-self: center;
 }
 
 @media (min-width: breakpoints.$md-min) {
   .main {
+    padding-right: 30px;
+  }
+
+  .central {
     padding-left: 30px;
     padding-right: 30px;
   }

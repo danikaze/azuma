@@ -8,7 +8,13 @@ import styles from './nav-bar.module.scss';
 import { LinkToPlayer } from '@components/links/link-to-player';
 import { LinkToMatch } from '@components/links/link-to-match';
 
-export type PageType = 'index' | 'standings' | 'teams' | 'players' | 'matches';
+export type PageType =
+  | 'index'
+  | 'standings'
+  | 'teams'
+  | 'players'
+  | 'matches'
+  | 'user';
 
 export interface Props {
   active: PageType;

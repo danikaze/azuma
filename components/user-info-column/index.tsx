@@ -1,9 +1,10 @@
-import { LinkToLogin } from '@components/links/link-to-login';
-import { LinkToLogout } from '@components/links/link-to-logout';
-import { UserAuthData } from '@model/user';
-import { useUserData } from '@utils/auth';
 import clsx from 'clsx';
 import { FC } from 'react';
+import { useUserData } from '@utils/auth';
+import { UserAuthData } from '@model/user';
+import { LinkToLogin } from '@components/links/link-to-login';
+import { LinkToLogout } from '@components/links/link-to-logout';
+import { LinkToUser } from '@components/links/link-to-user';
 
 import styles from './user-info-column.module.scss';
 
@@ -27,7 +28,7 @@ function renderNoUser(): JSX.Element {
 function renderUser(user: UserAuthData): JSX.Element[] {
   const userName = (
     <div key="user" className={styles.user}>
-      {user.username}
+      <LinkToUser>{user.username}</LinkToUser>
     </div>
   );
   const logout = (

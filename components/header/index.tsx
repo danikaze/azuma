@@ -14,13 +14,16 @@ export const Header: FC<Props> = ({ className }) => {
   const classes = clsx(styles.root, className);
 
   return (
-    <header className={classes} style={{ backgroundImage: `url(${headerBg})` }}>
+    <header
+      className={classes}
+      style={{ backgroundImage: `url(${headerBg.src})` }}
+    >
       <div className={styles.dark} />
       <div className={styles.messages}>
         <div>The most extreme sport in a future cyberpunk society</div>
       </div>
-      <img className={styles.pj} src={headerPj} />
-      <img className={styles.logo} src={headerLogo} />
+      <img className={styles.pj} src={headerPj.src} />
+      <img className={styles.logo} src={headerLogo.src} />
     </header>
   );
 };

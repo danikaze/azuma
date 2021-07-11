@@ -7,7 +7,7 @@ export interface Props {
 
 export const LinkToLogin: FC<Props> = ({ className, children }) => {
   return (
-    <Link href={AUTH_TWITTER_LOGIN_PAGE}>
+    <Link href={AUTH_TWITTER_LOGIN_PAGE} locale={false}>
       <a className={className}>{children || 'Log In'}</a>
     </Link>
   );

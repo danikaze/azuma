@@ -7,10 +7,6 @@ const PlayerPageHandler: AppPage<Props> = (props) => {
   return <PlayerPage {...props} />;
 };
 
-PlayerPageHandler.defaultProps = {
-  namespacesRequired: [],
-};
-
 interface Query {
   slug: string[];
 }

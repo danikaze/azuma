@@ -5,8 +5,4 @@ const IndexPageHandler: AppPage = () => {
   return <IndexPage />;
 };
 
-IndexPageHandler.defaultProps = {
-  namespacesRequired: [],
-};
-
 export default IndexPageHandler;

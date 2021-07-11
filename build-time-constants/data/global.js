@@ -1,6 +1,5 @@
 module.exports = {
   REDUX_ENABLED: false,
-  I18N_OPTIMIZED_NAMESPACES_ENABLED: true,
   AUTH_ENABLED: true,
   AUTH_LOGIN_PAGE: '/login',
   AUTH_LOGIN_SUCCESS_PAGE: '/?logged',

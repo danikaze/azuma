@@ -7,7 +7,7 @@ export interface Props {
 
 export const LinkToLogout: FC<Props> = ({ className, children }) => {
   return (
-    <Link href={AUTH_DO_LOGOUT_URL}>
+    <Link href={AUTH_DO_LOGOUT_URL} locale={false}>
       <a className={className}>{children || 'Log Out'}</a>
     </Link>
   );

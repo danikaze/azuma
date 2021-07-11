@@ -6,10 +6,6 @@ const UserPageHandler: AppPage<Props> = (props) => {
   return <UserPage {...props} />;
 };
 
-UserPageHandler.defaultProps = {
-  namespacesRequired: [],
-};
-
 export const getServerSideProps = userRequiredServerSideProps<Props>(
   async () => {
     return { props: {} };

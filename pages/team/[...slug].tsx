@@ -8,10 +8,6 @@ const TeamPageHandler: AppPage<Props> = (props) => {
   return <TeamPage {...props} />;
 };
 
-TeamPageHandler.defaultProps = {
-  namespacesRequired: [],
-};
-
 interface Query {
   slug: string[];
 }

@@ -6,10 +6,6 @@ const MatchPageHandler: AppPage<Props> = (props) => {
   return <MatchPage {...props} />;
 };
 
-MatchPageHandler.defaultProps = {
-  namespacesRequired: [],
-};
-
 interface Query {
   slug: string[];
 }

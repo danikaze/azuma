@@ -6,10 +6,6 @@ const TeamsPageHandler: AppPage<Props> = ({ teams }) => {
   return <TeamListPage teams={teams} />;
 };
 
-TeamsPageHandler.defaultProps = {
-  namespacesRequired: [],
-};
-
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   return {
     props: {

@@ -1,15 +1,15 @@
 import { ParsedUrlQuery } from 'querystring';
-import React, { ComponentType, FunctionComponent, useEffect } from 'react';
+import React, { ComponentType, useEffect } from 'react';
 import {
   GetServerSidePropsContext as GSSPCtx,
   GetServerSidePropsResult,
   NextComponentType,
   NextPage,
 } from 'next';
-import NextApp, { AppContext, AppProps as NextAppProps } from 'next/app';
+import { AppContext, AppProps as NextJsAppProps } from 'next/app';
 import Head from 'next/head';
-import { appWithTranslation } from '@utils/i18n';
-import { appWithAuth, useUserData } from '@utils/auth';
+import { appWithTranslation } from 'next-i18next';
+import { appWithAuth } from '@utils/auth';
 import { getLogger, globalLogger, Logger, NsLogger } from '@utils/logger';
 import { theme } from '@themes';
 import { UserAuthData } from '@model/user';
@@ -19,7 +19,6 @@ import '@styles/globals.css';
 
 export type AppPage<P = {}, IP = P> = NextPage<P & AppPageProps, IP>;
 interface AppPageProps {
-  namespacesRequired?: string[];
   logger: NsLogger;
 }
 
@@ -37,7 +36,7 @@ export type GetServerSideProps<
   context: GetServerSidePropsContext<Q & ParsedUrlQuery>
 ) => Promise<GetServerSidePropsResult<P>>;
 
-export type AppType = FunctionComponent<NextAppProps<AppPageProps>> & {
+export type AppType = ComponentType<NextJsAppProps<AppPageProps>> & {
   getInitialProps?: NextComponentType<AppContext>['getInitialProps'];
 };
 
@@ -71,8 +70,8 @@ const App: AppType = ({ Component, pageProps }) => {
 /*
  * Order of HOC matters
  * 1. Apply redux
- * 2. Apply i18n
- * 3. Apply auth
+ * 2. Apply auth
+ * 3. Apply i18n
  */
 let ExportedApp = App as AppType;
 
@@ -80,28 +79,13 @@ if (REDUX_ENABLED) {
   ExportedApp = require('@store').store.withRedux(App) as AppType;
 }
 
-if (I18N_OPTIMIZED_NAMESPACES_ENABLED && !AUTH_ENABLED) {
-  ExportedApp.getInitialProps = async (appContext: AppContext) => {
-    const appProps = await NextApp.getInitialProps(appContext);
-    const defaultProps = (appContext.Component as AppPage).defaultProps || {};
-    const pageProps = {
-      ...defaultProps,
-    };
-
-    return {
-      ...appProps,
-      pageProps: {
-        ...appProps.pageProps,
-        ...pageProps,
-      },
-    };
-  };
-}
-
 if (AUTH_ENABLED) {
   ExportedApp = appWithAuth(ExportedApp as ComponentType);
 }
 
-ExportedApp = appWithTranslation(ExportedApp as AppType);
+if (I18N_ENABLED) {
+  // tslint:disable-next-line:no-any
+  ExportedApp = appWithTranslation(ExportedApp as any) as AppType;
+}
 
 export default ExportedApp;

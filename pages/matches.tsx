@@ -8,10 +8,6 @@ const MatchesPageHandler: AppPage<Props> = (props) => {
   return <MatchListPage {...props} />;
 };
 
-MatchesPageHandler.defaultProps = {
-  namespacesRequired: [],
-};
-
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const matches = mockMatches.map((match) => {
     if (match.state !== 'playing') return match;

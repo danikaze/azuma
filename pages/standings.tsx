@@ -6,10 +6,6 @@ const StandingsPageHandler: AppPage<Props> = ({ standings }) => {
   return <StandingsPage standings={standings} />;
 };
 
-StandingsPageHandler.defaultProps = {
-  namespacesRequired: [],
-};
-
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   return {
     props: {

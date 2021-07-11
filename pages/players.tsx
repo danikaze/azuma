@@ -7,10 +7,6 @@ const PlayersPageHandler: AppPage<Props> = (props) => {
   return <PlayerListPage {...props} />;
 };
 
-PlayersPageHandler.defaultProps = {
-  namespacesRequired: [],
-};
-
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   return {
     props: {

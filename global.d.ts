@@ -1,3 +1,5 @@
+/// <reference types="./build-tools/styles.d.ts" />
+
 /**
  * Global type definitions available everywhere
  */

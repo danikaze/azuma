@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { Table, TableColumn, TableRow } from '@components/table';
-import { MatchAction } from '@utils/match-simulator/interfaces';
+import { MatchActionData } from '@utils/match-simulator/interfaces';
 
 import styles from './match-details-narration.module.scss';
 
 export type Props = {
-  actions: MatchAction[];
+  actions: MatchActionData[];
 };
 
 const columns: TableColumn[] = [
@@ -31,7 +31,7 @@ export const MatchDetailsNarration: FC<Props> = ({ actions }) => {
   );
 };
 
-function getRows(actions: MatchAction[]): TableRow[] {
+function getRows(actions: MatchActionData[]): TableRow[] {
   return actions.map((action) => ({
     time: formatTime(action.time),
     action: action.type,

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Match } from '@model/match/interfaces';
 import { getMilliseconds } from '@utils/jikan';
-import { MatchAction } from '@utils/match-simulator/interfaces';
+import { MatchActionData } from '@utils/match-simulator/interfaces';
 import { MatchSimulatorUpdater } from '@utils/match-simulator/match-simulator-updater';
 import { Props } from '.';
 
 type State = Match & {
-  actions?: MatchAction[];
+  actions?: MatchActionData[];
 };
 
 export function useMatch({ match }: Props) {

@@ -4,13 +4,13 @@ import styles from './match-details.module.scss';
 import { MatchDetailsNarration } from './narration';
 import { Match } from '@model/match/interfaces';
 import { SHOW_MATCH_PREVIEW_FROM } from '@utils/constants/ui';
-import { MatchAction } from '@utils/match-simulator/interfaces';
+import { MatchActionData } from '@utils/match-simulator/interfaces';
 import { getMilliseconds } from '@utils/jikan';
 import { MatchDetailsStartingSoon } from './starting-soon';
 
 export type Props = {
   match: Match;
-  actions?: MatchAction[];
+  actions?: MatchActionData[];
 };
 
 export const MatchDetails: FC<Props> = ({ match, actions }) => {

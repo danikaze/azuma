@@ -3,12 +3,18 @@ import {
   MATCH_BREAK_MS,
   MATCH_PERIOD_MS,
 } from '@utils/constants/game';
-import { isAction, MatchActionData } from './actions';
-import { MatchAction, MatchTeam } from './interfaces';
+import { MatchAction, MatchActionType } from './actions';
+import { createAction } from './actions/factory';
+import { MatchStartData } from './actions/match-start';
+import { TieBreakData } from './actions/tie-break';
+import { MatchActionData } from './interfaces';
 import { MatchSimulatorQuerier } from './match-simulator-querier';
 
+/**
+ * Top layer over the Match data that allows to update the state
+ */
 export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
-  constructor(log?: MatchAction[][]) {
+  constructor(log?: MatchActionData[][]) {
     super();
 
     if (log) {
@@ -17,10 +23,10 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
   }
 
   private static getActions(
-    log: MatchAction[][],
+    log: MatchActionData[][],
     ellapsedMs?: number
-  ): MatchAction[] {
-    const actions: MatchAction[] = [];
+  ): MatchActionData[] {
+    const actions: MatchActionData[] = [];
     const fullPeriodAndBreak = (MATCH_PERIOD_MS + MATCH_BREAK_MS) / 1000;
     let playedTime = ellapsedMs ? ellapsedMs / 1000 : undefined;
 
@@ -57,54 +63,31 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
   public replay(ellapsedMs?: number): void {
     const log = this.log;
     this.reset();
-    MatchSimulatorUpdater.getActions(log, ellapsedMs).forEach((action) =>
-      this.update(action)
+    MatchSimulatorUpdater.getActions(log, ellapsedMs).forEach((actionData) =>
+      this.update(createAction(actionData))
     );
   }
 
-  public update(action: MatchAction): void {
-    this.log[this.period].push(action);
-    this.actions.push(action);
-
-    // TODO: Maybe just provide the action API and delegate the effects to
-    // each action like `action.do(this)` when the list grows;
-    if (isAction('MatchStart', action)) {
-      return this.startMatch(action);
-    }
-
-    if (isAction('SwitchPossession', action)) {
-      return this.switchPosession();
-    }
-
-    if (isAction('Goal', action)) {
-      return this.goal();
-    }
-
-    if (isAction('TieBreak', action)) {
-      return this.untie(action);
-    }
-
-    if (isAction('PeriodEnd', action)) {
-      return;
-    }
-
-    throw new Error(`Unknown action ${action.type}`);
+  public update(action: MatchAction<MatchActionType>): void {
+    this.log[this.period].push(action.data);
+    this.actions.push(action.data);
+    action.run(this);
   }
 
-  public startMatch(action: MatchActionData['MatchStart']) {
-    this.possession = action.team;
+  public startMatch(action: MatchStartData) {
+    this.possession = action.player;
   }
 
   public switchPosession() {
-    this.possession = (1 - this.possession) as MatchTeam;
+    this.possession = this.getRandomPlayer({ team: 1 - this.possession[0] });
   }
 
   public goal() {
-    this.score[this.possession] += GOAL_SCORE;
+    this.score[this.possession[0]] += GOAL_SCORE;
     this.switchPosession();
   }
 
-  public untie(action: MatchActionData['TieBreak']) {
+  public untie(action: TieBreakData) {
     this.score[action.team] += Math.floor(GOAL_SCORE / 2);
   }
 }

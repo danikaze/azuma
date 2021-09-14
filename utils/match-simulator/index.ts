@@ -1,17 +1,18 @@
 import { Match } from '@model/match/interfaces';
 import { MATCH_PERIODS, MATCH_PERIOD_MS } from '@utils/constants/game';
-import { Rng } from '@utils/rng';
-import { createAction } from './actions';
+import { createAction } from './actions/factory';
 import { SimulateMatchResult } from './interfaces';
+import { MatchSimulatorStateOptions } from './match-simulator-state';
 import { MatchSimulatorUpdater } from './match-simulator-updater';
 
-export interface MatchSimulatorRunOptions {
-  rngSeed?: number;
-}
+export interface MatchSimulatorRunOptions extends MatchSimulatorStateOptions {}
 
+/**
+ * Match Simulator built over the State+Querier+Updater
+ * This class is the one carrying the logic of the simulation
+ */
 export class MatchSimulator extends MatchSimulatorUpdater {
   protected match: Match;
-  protected rng!: Rng;
 
   constructor(match: Match) {
     super();
@@ -34,7 +35,7 @@ export class MatchSimulator extends MatchSimulatorUpdater {
         createAction({
           time: 0,
           type: 'MatchStart',
-          team: this.rng.integer(0, 1) as 0 | 1,
+          player: this.getRandomPlayer(),
         })
       );
 
@@ -86,10 +87,6 @@ export class MatchSimulator extends MatchSimulatorUpdater {
   }
 
   public reset(options?: MatchSimulatorRunOptions): void {
-    super.reset();
-
-    this.rng = options?.rngSeed
-      ? new Rng({ seed: options.rngSeed })
-      : new Rng();
+    super.reset(options);
   }
 }

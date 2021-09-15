@@ -2,6 +2,7 @@ import { Match } from '@model/match/interfaces';
 import { MATCH_PERIODS } from '@utils/constants/game';
 import { Rng } from '@utils/rng';
 import { MatchActionData } from '..';
+import { ActionCreator, getActionFactory } from '../actions/factory';
 import { SIM_TEAM_REF_I_AWAY, SIM_TEAM_REF_I_HOME } from './constants';
 import { SimPlayer } from './player';
 import { SimTeam } from './team';
@@ -15,11 +16,13 @@ export interface MatchSimulatorStateOptions {
  */
 export class MatchSimulatorState {
   protected rng!: Rng;
+  protected createAction!: ActionCreator;
 
   protected readonly teams: [SimTeam, SimTeam];
-
   protected score!: [homeTeamScore: number, awayTeamScore: number];
   protected possession: SimPlayer | undefined;
+  /** Ellapsed PERIOD time in SECONDS */
+  protected time: number = 0;
   protected period: number = 0;
 
   /** Actions per period */
@@ -40,7 +43,9 @@ export class MatchSimulatorState {
     this.rng = options?.rngSeed
       ? new Rng({ seed: options.rngSeed })
       : new Rng();
+    this.createAction = getActionFactory(this.rng);
 
+    this.time = 0;
     this.period = 0;
     this.score = [0, 0];
     this.log = [];

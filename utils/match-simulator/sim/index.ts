@@ -1,6 +1,6 @@
 import { Match } from '@model/match/interfaces';
 import { MATCH_PERIODS, MATCH_PERIOD_MS } from '@utils/constants/game';
-import { createAction } from '../actions/factory';
+import { WeightedOptions } from '@utils/rng/weighted-options';
 import { MatchSimulatorStateOptions } from './match-simulator-state';
 import { MatchSimulatorUpdater } from './match-simulator-updater';
 
@@ -11,77 +11,84 @@ export type MatchSimulatorRunOptions = MatchSimulatorStateOptions;
  * This class is the one carrying the logic of the simulation
  */
 export class MatchSimulator extends MatchSimulatorUpdater {
-  protected match: Match;
-
   constructor(match: Match) {
     super(match);
-    this.match = match;
   }
 
   public run(options?: MatchSimulatorRunOptions): void {
     this.reset(options);
-    const minActions = 100;
-    const maxActions = 200;
-    const goalPercentage = 30;
     const matchPeriodSecs = MATCH_PERIOD_MS / 1000;
 
     for (let period = 0; period < MATCH_PERIODS; period++) {
-      const goalOpportunities = this.rng.integer(minActions, maxActions);
-      const opportunityInterval = matchPeriodSecs / goalOpportunities;
+      this.do({
+        type: period === 0 ? 'MatchStart' : 'PeriodStart',
+        playerRef: this.getRandomPlayer()!.getRef(),
+      });
 
-      this.update(
-        createAction({
-          time: 0,
-          type: period === 0 ? 'MatchStart' : 'PeriodStart',
-          playerRef: this.getRandomPlayer()!.getRef(),
-        })
-      );
+      this.runPeriodMainActions(matchPeriodSecs);
 
-      let time = opportunityInterval;
-      while (time < matchPeriodSecs) {
-        if (this.rng.bool(goalPercentage)) {
-          this.update(
-            createAction({
-              time: Math.floor(time),
-              type: 'Goal',
-            })
-          );
-
-          continue;
-        }
-
-        if (this.rng.bool()) {
-          this.update(
-            createAction({
-              time: Math.floor(time),
-              type: 'SwitchPossession',
-            })
-          );
-        }
-
-        time += opportunityInterval;
-      }
-
-      this.update(
-        createAction({
-          time: matchPeriodSecs,
-          type: period === MATCH_PERIODS - 1 ? 'MatchEnd' : 'PeriodEnd',
-        })
-      );
+      this.do({
+        type: period === MATCH_PERIODS - 1 ? 'MatchEnd' : 'PeriodEnd',
+      });
     }
 
     if (!this.isScoreTied()) return;
 
-    this.update(
-      createAction({
-        time: matchPeriodSecs,
-        type: 'TieBreak',
-        teamRef: this.getRandomTeam().getRef(),
-      })
-    );
+    this.do({
+      type: 'TieBreak',
+      teamRef: this.getRandomTeam().getRef(),
+    });
   }
 
   public reset(options?: MatchSimulatorRunOptions): void {
     super.reset(options);
+    this.time = 0;
+  }
+
+  protected runPeriodMainActions(matchPeriodSecs: number): void {
+    const actions = new WeightedOptions([
+      {
+        data: 'Goal',
+        weight: 1,
+      } as const,
+      {
+        data: 'Pass',
+        weight: 6,
+      } as const,
+      {
+        data: 'SwitchPossession',
+        weight: 4,
+      } as const,
+    ]);
+
+    while (this.time < matchPeriodSecs) {
+      const action = actions.pick(this.rng)!;
+
+      if (action === 'Goal') {
+        this.do({
+          type: 'Goal',
+        });
+        continue;
+      }
+
+      if (this.possession && action === 'Pass') {
+        const toPlayer = this.getRandomPlayer({
+          team: this.getAttackingTeam(),
+        })!;
+        this.do({
+          type: 'Pass',
+          from: this.possession.getRef(),
+          to: toPlayer.getRef(),
+        });
+        continue;
+      }
+
+      if (action === 'SwitchPossession') {
+        this.do({
+          type: 'SwitchPossession',
+        });
+        continue;
+      }
+    }
   }
 }

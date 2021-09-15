@@ -6,14 +6,17 @@ import {
 } from '@utils/constants/game';
 import { getLogger } from '@utils/logger';
 import { MatchActionData } from '..';
-import { MatchAction, MatchActionType } from '../actions';
-import { createAction } from '../actions/factory';
+import { MatchAction, MatchActionDataMap, MatchActionType } from '../actions';
 import { MatchStartData } from '../actions/match-start';
 import { TieBreakData } from '../actions/tie-break';
-import { SIM_PLAYER_REF_I_TEAM, SIM_TEAM_REF_I_AWAY } from './constants';
+import { SIM_PLAYER_REF_I_TEAM } from './constants';
 import { MatchSimulatorQuerier } from './match-simulator-querier';
 import { SimPlayer, SimPlayerRef } from './player';
 import { SimTeam, SimTeamRef } from './team';
+
+type ActionsWithoutTime = {
+  [K in keyof MatchActionDataMap]: Omit<MatchActionDataMap[K], 'time'>;
+};
 
 /**
  * Top layer over the Match data that allows to update the state
@@ -69,7 +72,7 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     const log = this.log;
     this.reset();
     MatchSimulatorUpdater.getActions(log, ellapsedMs).forEach((actionData) =>
-      this.update(createAction(actionData))
+      this.update(this.createAction(actionData))
     );
   }
 
@@ -90,7 +93,7 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
   }
 
   public startMatch(action: MatchStartData) {
-    this.possession = this.getPlayerFromRef(action.playerRef);
+    this.possession = this.getPlayer(action.playerRef);
   }
 
   public switchPossession(): void {
@@ -103,8 +106,8 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     })!;
   }
 
-  public setPossession(player: SimPlayer | undefined): void {
-    this.possession = player;
+  public setPossession(player: SimPlayer | SimPlayerRef | undefined): void {
+    this.possession = this.getPlayer(player);
   }
 
   public goal() {
@@ -116,20 +119,30 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     this.addScore(action.teamRef, GOAL_SCORE / 2);
   }
 
+  protected do<T extends keyof ActionsWithoutTime>(
+    data: ActionsWithoutTime[T]
+  ): void {
+    const action = this.createAction({
+      ...data,
+      time: this.time,
+    } as MatchActionDataMap[T]);
+    this.update(action);
+    this.time += action.duration;
+  }
+
   protected addScore(team: SimTeamRef, value: number): void {
     this.score[team] += value;
   }
 
-  protected getTeamFromRef(teamRef: SimTeamRef): SimTeam {
-    return this.teams[teamRef];
+  protected getTeam(team: SimTeam | SimTeamRef): SimTeam {
+    if (team instanceof SimTeam) return team;
+    return this.teams[team];
   }
 
-  protected getPlayerFromRef(
-    playerRef: SimPlayerRef | undefined
+  protected getPlayer(
+    player: SimPlayer | SimPlayerRef | undefined
   ): SimPlayer | undefined {
-    if (!playerRef) return;
-    return this.getTeamFromRef(
-      playerRef[SIM_PLAYER_REF_I_TEAM]
-    ).getPlayerFromRef(playerRef);
+    if (!player || player instanceof SimPlayer) return;
+    return this.getTeam(player[SIM_PLAYER_REF_I_TEAM]).getPlayerFromRef(player);
   }
 }

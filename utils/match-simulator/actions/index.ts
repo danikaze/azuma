@@ -2,6 +2,7 @@ import { MatchSimulatorUpdater } from '../sim/match-simulator-updater';
 import { GoalData } from './goal';
 import { MatchEndData } from './match-end';
 import { MatchStartData } from './match-start';
+import { PassData } from './pass';
 import { PeriodEndData } from './period-end';
 import { PeriodStartData } from './period-start';
 import { SwitchPossessionData } from './switch-posession';
@@ -11,9 +12,10 @@ export interface MatchActionDataMap {
   Goal: GoalData;
   MatchEnd: MatchEndData;
   MatchStart: MatchStartData;
-  SwitchPossession: SwitchPossessionData;
+  Pass: PassData;
   PeriodEnd: PeriodEndData;
   PeriodStart: PeriodStartData;
+  SwitchPossession: SwitchPossessionData;
   TieBreak: TieBreakData;
 }
 
@@ -34,10 +36,27 @@ export interface MatchActionBaseData<
 }
 
 export abstract class MatchAction<T extends MatchActionType> {
-  public readonly data: MatchActionDataMap[T];
+  /** Minimum duration of the action in seconds */
+  public static readonly minDuration: number = -1;
+  /** Maximum duration of the action in seconds */
+  public static readonly maxDuration: number = -1;
 
-  constructor(data: MatchActionDataMap[T]) {
+  public readonly data: MatchActionDataMap[T];
+  public readonly duration: number;
+
+  constructor(data: MatchActionDataMap[T], duration: number) {
+    if (
+      !IS_PRODUCTION &&
+      ((this.constructor as typeof MatchAction).minDuration === -1 ||
+        (this.constructor as typeof MatchAction).maxDuration === -1)
+    ) {
+      throw new Error(
+        `Action "${data.type}" doesn't have proper duration defined`
+      );
+    }
+
     this.data = data;
+    this.duration = duration;
   }
 
   public abstract run(sim: MatchSimulatorUpdater): void;

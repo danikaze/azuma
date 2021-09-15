@@ -7,6 +7,9 @@ export interface TieBreakData extends MatchActionBaseData<'TieBreak'> {
 }
 
 export class TieBreak extends MatchAction<'TieBreak'> {
+  public static readonly minDuration = 300;
+  public static readonly maxDuration = 300;
+
   public run(sim: MatchSimulatorUpdater): void {
     sim.untie(this.data);
   }

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Table, TableColumn, TableRow } from '@components/table';
-import { MatchActionData } from '@utils/match-simulator/interfaces';
+import { MatchActionData } from '@utils/match-simulator';
 
 import styles from './match-details-narration.module.scss';
 

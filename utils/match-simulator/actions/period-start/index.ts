@@ -1,9 +1,9 @@
-import { MatchTeamRef } from '@utils/match-simulator/interfaces';
-import { MatchSimulatorUpdater } from '@utils/match-simulator/match-simulator-updater';
+import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
+import { SimPlayerRef } from '@utils/match-simulator/sim/player';
 import { MatchActionBaseData, MatchAction } from '..';
 
 export interface PeriodStartData extends MatchActionBaseData<'PeriodStart'> {
-  team: MatchTeamRef;
+  playerRef: SimPlayerRef;
 }
 
 export class PeriodStart extends MatchAction<'PeriodStart'> {

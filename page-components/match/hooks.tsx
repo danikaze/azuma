@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Match } from '@model/match/interfaces';
 import { getMilliseconds } from '@utils/jikan';
-import { MatchActionData } from '@utils/match-simulator/interfaces';
-import { MatchSimulatorUpdater } from '@utils/match-simulator/match-simulator-updater';
+import { MatchActionData, simulateOngoingMatch } from '@utils/match-simulator';
 import { Props } from '.';
 
 type State = Match & {
@@ -39,7 +38,5 @@ function getCurrentState(
     return {};
   }
 
-  const sim = new MatchSimulatorUpdater(match.log);
-  sim.replay(getMilliseconds() - match.timestamp);
-  return sim.getResult();
+  return simulateOngoingMatch(match, getMilliseconds() - match.timestamp);
 }

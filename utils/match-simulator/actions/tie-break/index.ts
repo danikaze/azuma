@@ -1,9 +1,9 @@
-import { MatchTeamRef } from '@utils/match-simulator/interfaces';
-import { MatchSimulatorUpdater } from '@utils/match-simulator/match-simulator-updater';
+import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
+import { SimTeamRef } from '@utils/match-simulator/sim/team';
 import { MatchActionBaseData, MatchAction } from '..';
 
 export interface TieBreakData extends MatchActionBaseData<'TieBreak'> {
-  team: MatchTeamRef;
+  teamRef: SimTeamRef;
 }
 
 export class TieBreak extends MatchAction<'TieBreak'> {

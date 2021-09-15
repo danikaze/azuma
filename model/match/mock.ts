@@ -2,9 +2,10 @@ import { MATCH_FULL_DURATION_MS } from '@utils/constants/game';
 import { mockTeams } from '@model/team/mock';
 import { mockCourts } from '@model/court/mock';
 import { roundRobinMatches } from '@utils/round-robin-matches';
-import { MatchSimulator } from '@utils/match-simulator';
+import { MatchSimulator } from '@utils/match-simulator/sim';
 import { getMilliseconds } from '@utils/jikan';
 import { Match, MatchState } from './interfaces';
+import { simulateFullMatch } from '@utils/match-simulator';
 
 export const mockMatches = (() => {
   const COMPLETED_ROUNDS = 4;
@@ -50,9 +51,10 @@ export const mockMatches = (() => {
         updatedAt: state === 'pending' ? firstTime : time,
       };
 
+      // even if by the time it's still playing, the full match is simulated
+      // and then it will be displayed depending on the played time in the UI
       if (state === 'playing' || state === 'finished') {
-        const simulation = new MatchSimulator(match);
-        Object.assign(match, simulation.run());
+        Object.assign(match, simulateFullMatch(match));
       }
 
       matches.push(match);

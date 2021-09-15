@@ -1,12 +1,12 @@
 import { FC } from 'react';
-
-import styles from './match-details.module.scss';
-import { MatchDetailsNarration } from './narration';
 import { Match } from '@model/match/interfaces';
 import { SHOW_MATCH_PREVIEW_FROM } from '@utils/constants/ui';
-import { MatchActionData } from '@utils/match-simulator/interfaces';
 import { getMilliseconds } from '@utils/jikan';
+import { MatchActionData } from '@utils/match-simulator';
+import { MatchDetailsNarration } from './narration';
 import { MatchDetailsStartingSoon } from './starting-soon';
+
+import styles from './match-details.module.scss';
 
 export type Props = {
   match: Match;

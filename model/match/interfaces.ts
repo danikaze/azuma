@@ -1,7 +1,7 @@
 import { PublicId, TimestampData, TimestampUtc } from '@model';
 import { Court } from '@model/court/interfaces';
 import { Team } from '@model/team/interfaces';
-import { MatchActionData } from '@utils/match-simulator/interfaces';
+import { MatchActionData } from '@utils/match-simulator';
 
 export type MatchState = 'pending' | 'playing' | 'finished' | 'cancelled';
 

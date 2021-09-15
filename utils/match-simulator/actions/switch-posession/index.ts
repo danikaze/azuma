@@ -1,4 +1,4 @@
-import { MatchSimulatorUpdater } from '@utils/match-simulator/match-simulator-updater';
+import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
 import { MatchActionBaseData, MatchAction } from '..';
 
 export interface SwitchPossessionData
@@ -6,6 +6,6 @@ export interface SwitchPossessionData
 
 export class SwitchPossession extends MatchAction<'SwitchPossession'> {
   public run(sim: MatchSimulatorUpdater): void {
-    sim.switchPosession();
+    sim.switchPossession();
   }
 }

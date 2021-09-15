@@ -1,4 +1,4 @@
-import { MatchSimulatorUpdater } from '../match-simulator-updater';
+import { MatchSimulatorUpdater } from '../sim/match-simulator-updater';
 import { GoalData } from './goal';
 import { MatchEndData } from './match-end';
 import { MatchStartData } from './match-start';
@@ -19,6 +19,11 @@ export interface MatchActionDataMap {
 
 export type MatchActionType = keyof MatchActionDataMap;
 
+/*
+ * NOTE: To make actions serializables, do NOT use objects such as
+ * `SimPlayer` or `SimTeam`.
+ * Use references like `SimPlayerRef` and `SimTeamRef` instead.
+ */
 export interface MatchActionBaseData<
   T extends MatchActionType = MatchActionType
 > {

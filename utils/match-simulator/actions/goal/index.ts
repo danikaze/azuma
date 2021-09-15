@@ -1,4 +1,4 @@
-import { MatchSimulatorUpdater } from '@utils/match-simulator/match-simulator-updater';
+import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
 import { MatchActionBaseData, MatchAction } from '..';
 
 export interface GoalData extends MatchActionBaseData<'Goal'> {}

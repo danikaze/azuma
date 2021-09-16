@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import { FC } from 'react';
-import { Player } from '@model/player/interfaces';
 import { Table, TableColumn, TableRow } from '@components/table';
+import { LinkToPlayer } from '@components/links/link-to-player';
+import { PlayerInTeam } from '@model/team/interfaces';
 
 import styles from './roster.module.scss';
-import { LinkToPlayer } from '@components/links/link-to-player';
 
 export interface Props {
-  players: Player[];
+  players: PlayerInTeam[];
   className?: string;
 }
 
@@ -28,13 +28,13 @@ export const Roster: FC<Props> = ({ className, players }) => {
   );
 };
 
-function getRows(players: Player[]): TableRow<string, 'playerId'>[] {
-  return players.map((player) => ({
-    playerId: player.playerId,
-    number: player.number,
-    position: player.position,
-    fullName: <LinkToPlayer player={player} />,
-    height: `${player.height} cm`,
-    weight: `${player.weight} kg`,
+function getRows(players: PlayerInTeam[]): TableRow<string, 'playerId'>[] {
+  return players.map((playerInTeam) => ({
+    playerId: playerInTeam.player.playerId,
+    number: playerInTeam.number,
+    position: playerInTeam.position,
+    fullName: <LinkToPlayer player={playerInTeam.player} />,
+    height: `${playerInTeam.player.height} cm`,
+    weight: `${playerInTeam.player.weight} kg`,
   }));
 }

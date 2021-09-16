@@ -11,5 +11,7 @@ export class PeriodStart extends MatchAction<'PeriodStart'> {
   public static readonly minDuration = MatchStart.minDuration;
   public static readonly maxDuration = MatchStart.maxDuration;
 
-  public run(sim: MatchSimulatorUpdater): void {}
+  public run(sim: MatchSimulatorUpdater): void {
+    sim.startPeriod(this.data);
+  }
 }

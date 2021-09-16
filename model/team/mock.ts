@@ -71,11 +71,19 @@ export const mockTeams = (() => {
       updatedAt: time + n,
     };
 
+    const players = mockPlayers
+      .slice(t * playersPerTeam, (t + 1) * playersPerTeam)
+      .map((player, i) => ({
+        player,
+        number: i + 1,
+        position: player.position,
+      }));
+
     n++;
     const team: Team = {
+      players,
       teamId: `mock-team-${t}`,
       image: `team-${t}-logo.png`,
-      players: mockPlayers.slice(t * playersPerTeam, (t + 1) * playersPerTeam),
       ...fixedData[t],
       pos: 0,
       wins: 0,
@@ -89,8 +97,8 @@ export const mockTeams = (() => {
     };
     teams.push(team);
 
-    team.players.forEach((player) => {
-      player.teamId = team.teamId;
+    team.players.forEach((playerInTeam) => {
+      playerInTeam.player.teamId = team.teamId;
     });
   }
 

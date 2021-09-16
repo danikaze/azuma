@@ -1,13 +1,8 @@
 import { FC } from 'react';
-import { Player } from '@model/player/interfaces';
-import { Team } from '@model/team/interfaces';
 import { Page } from '@components/page';
-import { PlayerList } from '@components/player-list';
+import { PlayerList, Props as PlayerListProps } from '@components/player-list';
 
-export type Props = {
-  players: Player[];
-  teams: Team[];
-};
+export type Props = PlayerListProps;
 
 export const PlayerListPage: FC<Props> = ({ players, teams }) => {
   return (

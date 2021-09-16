@@ -1,6 +1,5 @@
 import clsx from 'clsx';
-import { FC, ReactNode } from 'react';
-
+import { ReactNode } from 'react';
 import styles from './table.module.scss';
 
 export interface TableColumn<K extends string = string> {

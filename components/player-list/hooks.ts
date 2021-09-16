@@ -1,21 +1,12 @@
 import { getPlayerName } from '@model/player';
-import { Player, PlayerPosition } from '@model/player/interfaces';
+import { PlayerPosition } from '@model/player/interfaces';
 import { Team } from '@model/team/interfaces';
 import { PLAYERS_PER_PAGE } from '@utils/constants/ui';
 import { ChangeEventHandler, useState } from 'react';
-import { Props } from '.';
+import { PlayerInfo, Props } from '.';
 
-type PlayerInfo = {
-  player: Pick<
-    Player,
-    | 'playerId'
-    | 'name'
-    | 'surname'
-    | 'number'
-    | 'position'
-    | 'height'
-    | 'weight'
-  >;
+type StatePlayerInfo = {
+  player: PlayerInfo;
   team?: Pick<Team, 'teamId' | 'name' | 'shortName'>;
 };
 
@@ -25,7 +16,7 @@ interface State {
   textFilter: string;
   position: PlayerPosition | undefined;
   teamId: Team['teamId'] | undefined;
-  currentPlayers: PlayerInfo[];
+  currentPlayers: StatePlayerInfo[];
 }
 
 export function usePage({ players, teams }: Props) {
@@ -110,7 +101,7 @@ export function usePage({ players, teams }: Props) {
 
   function filterPlayers(
     filter: Partial<Pick<State, 'textFilter' | 'position' | 'teamId'>>
-  ): PlayerInfo[] {
+  ): StatePlayerInfo[] {
     const { textFilter, position, teamId } = filter;
 
     return players
@@ -123,7 +114,7 @@ export function usePage({ players, teams }: Props) {
       )
       .map((player) => ({
         player,
-        team: teams.find((team) => team.teamId === player.teamId),
+        team: teams.find((team) => team.teamId === player.teamId)!,
       }));
   }
 
@@ -140,9 +131,9 @@ export function usePage({ players, teams }: Props) {
 }
 
 function paginatePlayers(
-  filteredPlayers: PlayerInfo[],
+  filteredPlayers: StatePlayerInfo[],
   page: number
-): PlayerInfo[] {
+): StatePlayerInfo[] {
   return filteredPlayers.slice(
     PLAYERS_PER_PAGE * page,
     PLAYERS_PER_PAGE * (page + 1)

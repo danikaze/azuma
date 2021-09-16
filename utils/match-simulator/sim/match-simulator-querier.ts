@@ -1,9 +1,13 @@
-import { PlayerPosition } from '@model/player/interfaces';
 import { MatchSimulatorState } from './match-simulator-state';
 import { SimulateMatchResult } from '..';
-import { SimTeam, SimTeamRef } from './team';
-import { SimPlayer } from './player';
-import { SIM_TEAM_REF_I_AWAY, SIM_TEAM_REF_I_HOME } from './constants';
+import { SimTeam, SimTeamGetRandomPlayerOptions, SimTeamRef } from './team';
+import { SimPlayer, SimPlayerRef } from './player';
+import {
+  FieldPosition,
+  SIM_PLAYER_REF_I_TEAM,
+  SIM_TEAM_REF_I_AWAY,
+  SIM_TEAM_REF_I_HOME,
+} from './constants';
 
 /**
  * Wraps the raw data of a match and provides public accesors via methods
@@ -16,6 +20,11 @@ export class MatchSimulatorQuerier extends MatchSimulatorState {
       log: this.log,
       actions: this.actions,
     };
+  }
+
+  public getBallPosition(): FieldPosition {
+    // return a reference but readonly-typed so it's not modified from outside
+    return this.ballPosition;
   }
 
   public getAttackingTeam(): SimTeam | undefined {
@@ -34,12 +43,12 @@ export class MatchSimulatorQuerier extends MatchSimulatorState {
     return this.score[SIM_TEAM_REF_I_HOME] === this.score[SIM_TEAM_REF_I_AWAY];
   }
 
-  protected getAttackingTeamIndex(): SimTeamRef | undefined {
+  public getAttackingTeamIndex(): SimTeamRef | undefined {
     if (!this.possession) return;
     return this.teams[0] === this.possession.team ? 0 : 1;
   }
 
-  protected getDefendingTeamIndex(): SimTeamRef | undefined {
+  public getDefendingTeamIndex(): SimTeamRef | undefined {
     if (!this.possession) return;
     return this.teams[0] === this.possession.team ? 1 : 0;
   }
@@ -49,14 +58,22 @@ export class MatchSimulatorQuerier extends MatchSimulatorState {
   }
 
   protected getRandomPlayer(
-    options: {
-      team?: SimTeam;
-      desiredPositions?: PlayerPosition[];
-      forbiddenPositions?: PlayerPosition[];
-    } = {}
+    options: { team?: SimTeam } & SimTeamGetRandomPlayerOptions = {}
   ): SimPlayer | undefined {
     const team = options.team || this.getRandomTeam();
 
-    return team.getRandomPlayer(this.rng)!;
+    return team.getRandomPlayer(this.rng, options)!;
+  }
+
+  protected getTeam(team: SimTeam | SimTeamRef): SimTeam {
+    if (team instanceof SimTeam) return team;
+    return this.teams[team];
+  }
+
+  protected getPlayer(
+    player: SimPlayer | SimPlayerRef | undefined
+  ): SimPlayer | undefined {
+    if (!player || player instanceof SimPlayer) return player;
+    return this.getTeam(player[SIM_PLAYER_REF_I_TEAM]).getPlayerFromRef(player);
   }
 }

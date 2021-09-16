@@ -1,6 +1,7 @@
 import { Match } from '@model/match/interfaces';
 import { MATCH_PERIODS, MATCH_PERIOD_MS } from '@utils/constants/game';
-import { WeightedOptions } from '@utils/rng/weighted-options';
+import { MatchActionType } from '../actions';
+import { getActionChances } from '../actions/factory';
 import { MatchSimulatorStateOptions } from './match-simulator-state';
 import { MatchSimulatorUpdater } from './match-simulator-updater';
 
@@ -46,23 +47,8 @@ export class MatchSimulator extends MatchSimulatorUpdater {
   }
 
   protected runPeriodMainActions(matchPeriodSecs: number): void {
-    const actions = new WeightedOptions([
-      {
-        data: 'Goal',
-        weight: 1,
-      } as const,
-      {
-        data: 'Pass',
-        weight: 6,
-      } as const,
-      {
-        data: 'SwitchPossession',
-        weight: 4,
-      } as const,
-    ]);
-
     while (this.time < matchPeriodSecs) {
-      const action = actions.pick(this.rng)!;
+      const action = this.selectNextActionType();
 
       if (action === 'Goal') {
         this.do({
@@ -71,13 +57,15 @@ export class MatchSimulator extends MatchSimulatorUpdater {
         continue;
       }
 
-      if (this.possession && action === 'Pass') {
+      if (action === 'Pass') {
+        const currentPlayer = this.getPlayer(this.possession)!;
         const toPlayer = this.getRandomPlayer({
           team: this.getAttackingTeam(),
+          filter: (player) => player !== currentPlayer,
         })!;
         this.do({
           type: 'Pass',
-          from: this.possession.getRef(),
+          from: this.possession!.getRef(),
           to: toPlayer.getRef(),
         });
         continue;
@@ -90,5 +78,9 @@ export class MatchSimulator extends MatchSimulatorUpdater {
         continue;
       }
     }
+  }
+
+  protected selectNextActionType(): MatchActionType {
+    return getActionChances(this).pick(this.rng)!;
   }
 }

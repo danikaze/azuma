@@ -8,5 +8,7 @@ export class PeriodEnd extends MatchAction<'PeriodEnd'> {
   public static readonly minDuration = MatchEnd.minDuration;
   public static readonly maxDuration = MatchEnd.maxDuration;
 
-  public run(sim: MatchSimulatorUpdater): void {}
+  public run(sim: MatchSimulatorUpdater): void {
+    sim.endPeriod(this.data);
+  }
 }

@@ -7,5 +7,7 @@ export class MatchEnd extends MatchAction<'MatchEnd'> {
   public static readonly minDuration = 0;
   public static readonly maxDuration = 0;
 
-  public run(sim: MatchSimulatorUpdater): void {}
+  public run(sim: MatchSimulatorUpdater): void {
+    sim.endMatch(this.data);
+  }
 }

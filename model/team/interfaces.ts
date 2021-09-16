@@ -17,7 +17,7 @@ export interface Team extends TimestampData {
   fgColor: string;
 
   /** List of players */
-  players: Player[];
+  players: PlayerInTeam[];
 
   /** Position in the table */
   pos: number;
@@ -65,3 +65,9 @@ export type FormationPositions = readonly [
   PlayerPosition,
   PlayerPosition
 ];
+
+export interface PlayerInTeam {
+  player: Player;
+  number: number;
+  position: PlayerPosition;
+}

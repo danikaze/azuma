@@ -22,8 +22,6 @@ export interface Player extends TimestampData {
 
   /** Preferred position */
   position: PlayerPosition;
-  /** Shirt Number */
-  number?: number;
 
   /** List of altered status */
   states: PlayerAlteredState[];

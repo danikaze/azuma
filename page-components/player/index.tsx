@@ -6,7 +6,7 @@ import { Team } from '@model/team/interfaces';
 import { PlayerDetails } from '@components/player-details';
 
 export type Props = {
-  player: Player;
+  player: Player & { number: number | undefined };
   team?: Team;
 };
 

@@ -2,6 +2,7 @@ import { AppPage, GetServerSideProps } from '@_app';
 import { mockPlayers } from '@model/player/mock';
 import { mockTeams } from '@model/team/mock';
 import { PlayerPage, Props } from '@page-components/player';
+import { Player } from '@model/player/interfaces';
 
 const PlayerPageHandler: AppPage<Props> = (props) => {
   return <PlayerPage {...props} />;
@@ -24,15 +25,27 @@ export const getServerSideProps: GetServerSideProps<Props, Query> = async (
   }
 
   const team = mockTeams.find((t) =>
-    t.players.find((p) => p.playerId === playerId)
+    t.players.find((p) => p.player.playerId === playerId)
   );
 
   return {
     props: {
-      player,
       team,
+      player: {
+        ...player,
+        number: getPlayerNumber(player),
+      },
     },
   };
 };
+
+function getPlayerNumber(player: Player): number | undefined {
+  const team = mockTeams.find((team) => team.teamId === player.teamId);
+  if (!team) return;
+
+  return team.players.find(
+    (playerInTeam) => player.playerId === playerInTeam.player.playerId
+  )?.number;
+}
 
 export default PlayerPageHandler;

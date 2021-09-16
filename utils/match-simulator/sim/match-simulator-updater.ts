@@ -7,12 +7,20 @@ import {
 import { getLogger } from '@utils/logger';
 import { MatchActionData } from '..';
 import { MatchAction, MatchActionDataMap, MatchActionType } from '../actions';
+import { MatchEndData } from '../actions/match-end';
 import { MatchStartData } from '../actions/match-start';
+import { PeriodEndData } from '../actions/period-end';
+import { PeriodStartData } from '../actions/period-start';
 import { TieBreakData } from '../actions/tie-break';
-import { SIM_PLAYER_REF_I_TEAM } from './constants';
+import {
+  FieldSection,
+  FieldSectionSide,
+  FIELD_SECTION_I,
+  FIELD_SECTION_SIDE_I,
+} from './constants';
 import { MatchSimulatorQuerier } from './match-simulator-querier';
 import { SimPlayer, SimPlayerRef } from './player';
-import { SimTeam, SimTeamRef } from './team';
+import { SimTeamRef } from './team';
 
 type ActionsWithoutTime = {
   [K in keyof MatchActionDataMap]: Omit<MatchActionDataMap[K], 'time'>;
@@ -92,9 +100,24 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     action.run(this);
   }
 
-  public startMatch(action: MatchStartData) {
+  public startMatch(action: MatchStartData): void {
     this.possession = this.getPlayer(action.playerRef);
+    this.ballPosition[FIELD_SECTION_I] = FieldSection.CENTER;
+    this.ballPosition[FIELD_SECTION_SIDE_I] = FieldSectionSide.CENTER;
   }
+
+  public startPeriod(action: PeriodStartData): void {
+    this.possession = this.getPlayer(action.playerRef);
+    this.ballPosition[FIELD_SECTION_I] = FieldSection.CENTER;
+    this.ballPosition[FIELD_SECTION_SIDE_I] = FieldSectionSide.CENTER;
+  }
+
+  public endPeriod(action: PeriodEndData): void {
+    this.period++;
+    this.time = 0;
+  }
+
+  public endMatch(action: MatchEndData): void {}
 
   public switchPossession(): void {
     if (!this.possession) {
@@ -107,12 +130,23 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
   }
 
   public setPossession(player: SimPlayer | SimPlayerRef | undefined): void {
+    const MAX_SECTOR_INDEX = 4;
     this.possession = this.getPlayer(player);
+    // TODO: manage properly the direction of the ball
+    this.ballPosition[FIELD_SECTION_I] = Math.max(
+      0,
+      Math.min(
+        MAX_SECTOR_INDEX,
+        this.ballPosition[FIELD_SECTION_I] + this.rng.integer(-1, 1)
+      )
+    );
   }
 
   public goal() {
     if (!this.possession) return;
     this.addScore(this.getAttackingTeamIndex()!, GOAL_SCORE);
+    this.ballPosition[FIELD_SECTION_I] = FieldSection.CENTER;
+    this.ballPosition[FIELD_SECTION_SIDE_I] = FieldSectionSide.CENTER;
   }
 
   public untie(action: TieBreakData) {
@@ -132,17 +166,5 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
 
   protected addScore(team: SimTeamRef, value: number): void {
     this.score[team] += value;
-  }
-
-  protected getTeam(team: SimTeam | SimTeamRef): SimTeam {
-    if (team instanceof SimTeam) return team;
-    return this.teams[team];
-  }
-
-  protected getPlayer(
-    player: SimPlayer | SimPlayerRef | undefined
-  ): SimPlayer | undefined {
-    if (!player || player instanceof SimPlayer) return;
-    return this.getTeam(player[SIM_PLAYER_REF_I_TEAM]).getPlayerFromRef(player);
   }
 }

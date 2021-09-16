@@ -1,17 +1,21 @@
-import { FC } from 'react';
-import { PLAYER_POSITIONS } from '@model/player/constants';
-import { Player } from '@model/player/interfaces';
-import { Team } from '@model/team/interfaces';
 import { LinkToPlayer } from '@components/links/link-to-player';
 import { LinkToTeam } from '@components/links/link-to-team';
 import { Table, TableColumn, TableRow } from '@components/table';
-
+import { PLAYER_POSITIONS } from '@model/player/constants';
+import { Player } from '@model/player/interfaces';
+import { Team } from '@model/team/interfaces';
+import { FC } from 'react';
 import { usePage } from './hooks';
 import styles from './player-list.module.scss';
 
+export type PlayerInfo = Pick<
+  Player,
+  'playerId' | 'name' | 'surname' | 'teamId' | 'height' | 'weight' | 'position'
+> & { number: number | undefined };
+
 export type Props = {
-  players: Player[];
-  teams: Team[];
+  players: PlayerInfo[];
+  teams: Pick<Team, 'teamId' | 'name' | 'shortName'>[];
 };
 
 const playersTableColumns: TableColumn[] = [

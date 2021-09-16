@@ -7,7 +7,7 @@ import { LinkToTeam } from '@components/links/link-to-team';
 import styles from './player-details.module.scss';
 
 export type Props = {
-  player: Player;
+  player: Player & { number: number | undefined };
   team?: Team;
 };
 

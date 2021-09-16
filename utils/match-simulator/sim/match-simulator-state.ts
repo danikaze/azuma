@@ -3,7 +3,13 @@ import { MATCH_PERIODS } from '@utils/constants/game';
 import { Rng } from '@utils/rng';
 import { MatchActionData } from '..';
 import { ActionCreator, getActionFactory } from '../actions/factory';
-import { SIM_TEAM_REF_I_AWAY, SIM_TEAM_REF_I_HOME } from './constants';
+import {
+  FieldPosition,
+  FieldSection,
+  FieldSectionSide,
+  SIM_TEAM_REF_I_AWAY,
+  SIM_TEAM_REF_I_HOME,
+} from './constants';
 import { SimPlayer } from './player';
 import { SimTeam } from './team';
 
@@ -24,6 +30,10 @@ export class MatchSimulatorState {
   /** Ellapsed PERIOD time in SECONDS */
   protected time: number = 0;
   protected period: number = 0;
+  protected readonly ballPosition: FieldPosition = [
+    FieldSection.CENTER,
+    FieldSectionSide.CENTER,
+  ];
 
   /** Actions per period */
   protected log!: MatchActionData[][];

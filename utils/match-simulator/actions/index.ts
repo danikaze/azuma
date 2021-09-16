@@ -1,3 +1,4 @@
+import { MatchSimulatorQuerier } from '../sim/match-simulator-querier';
 import { MatchSimulatorUpdater } from '../sim/match-simulator-updater';
 import { GoalData } from './goal';
 import { MatchEndData } from './match-end';
@@ -41,6 +42,8 @@ export abstract class MatchAction<T extends MatchActionType> {
   /** Maximum duration of the action in seconds */
   public static readonly maxDuration: number = -1;
 
+  protected static readonly DEFAULT_ACTION_CHANCES = 100;
+
   public readonly data: MatchActionDataMap[T];
   public readonly duration: number;
 
@@ -57,6 +60,17 @@ export abstract class MatchAction<T extends MatchActionType> {
 
     this.data = data;
     this.duration = duration;
+  }
+
+  /**
+   * By default all actions have a chance of "100" to get picked but overriding
+   * this method gives the opportunity to customize it depending on the state
+   * of the match.
+   * i.e. players shouldn't score a goal if they are in their field, so it
+   * returns `0` in that cases
+   */
+  public static getChances(sim: MatchSimulatorQuerier): number {
+    return MatchAction.DEFAULT_ACTION_CHANCES;
   }
 
   public abstract run(sim: MatchSimulatorUpdater): void;

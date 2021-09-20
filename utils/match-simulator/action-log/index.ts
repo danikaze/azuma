@@ -3,6 +3,7 @@ import { GoalData } from './goal';
 import { MatchEndData } from './match-end';
 import { MatchStartData } from './match-start';
 import { PassData } from './pass';
+import { PassCutData } from './pass-cut';
 import { PeriodEndData } from './period-end';
 import { PeriodStartData } from './period-start';
 import { SwitchPossessionData } from './switch-posession';
@@ -13,6 +14,7 @@ export interface MatchActionLogDataMap {
   MatchEnd: MatchEndData;
   MatchStart: MatchStartData;
   Pass: PassData;
+  PassCut: PassCutData;
   PeriodEnd: PeriodEndData;
   PeriodStart: PeriodStartData;
   SwitchPossession: SwitchPossessionData;

@@ -124,6 +124,18 @@ export class Rng {
   }
 
   /**
+   * Returns a random value within the provided ones and remove it so can't
+   * be picked again
+   */
+  public extract<T>(values: T[]): T | undefined {
+    if (values.length === 0) return;
+    const index = this.integer(0, values.length - 1);
+    const value = values[index];
+    values.splice(index, 1);
+    return value;
+  }
+
+  /**
    * Shuffles an array modifying it
    */
   public shuffle<T>(data: T[]): T[] {

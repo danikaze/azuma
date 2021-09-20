@@ -19,6 +19,8 @@ export interface Player extends TimestampData {
   weight: number;
   /** Dominant hand */
   dominantHand: DominantHand;
+  /** Numeric Skills */
+  skills: PlayerSkills;
 
   /** Preferred position */
   position: PlayerPosition;
@@ -43,3 +45,4 @@ export type PlayerPosition = typeof PLAYER_POSITIONS[number];
 
 // all player stats go from 0 to 100
 export type PlayerSkills = Record<typeof PLAYER_SKILLS[number], number>;
+export type PlayerSkill = keyof PlayerSkills;

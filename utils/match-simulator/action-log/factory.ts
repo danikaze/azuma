@@ -4,6 +4,7 @@ import { Goal } from './goal';
 import { MatchEnd } from './match-end';
 import { MatchStart } from './match-start';
 import { Pass } from './pass';
+import { PassCut } from './pass-cut';
 import { PeriodEnd } from './period-end';
 import { PeriodStart } from './period-start';
 import { SwitchPossession } from './switch-posession';
@@ -14,27 +15,16 @@ const actionDef = {
   MatchEnd,
   MatchStart,
   Pass,
+  PassCut,
   PeriodEnd,
   PeriodStart,
   SwitchPossession,
   TieBreak,
 } as const;
 
-type ManuallySelectedMatchActionLogType =
-  | 'MatchStart'
-  | 'MatchEnd'
-  | 'PeriodStart'
-  | 'PeriodEnd'
-  | 'TieBreak';
-
 export type ActionLogCreator = <T extends MatchActionLogType>(
   data: MatchActionLogDataMap[T]
 ) => MatchActionLog<T>;
-
-export type PossibleRandomMatchActionType = Exclude<
-  MatchActionLogType,
-  ManuallySelectedMatchActionLogType
->;
 
 /**
  * Creates a MatchActionLog based on the data type

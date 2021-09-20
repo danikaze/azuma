@@ -1,7 +1,7 @@
 import { Match } from '@model/match/interfaces';
 import { MATCH_PERIODS, MATCH_PERIOD_MS } from '@utils/constants/game';
-import { MatchActionLogType } from '../action-log';
-import { getActionLogChances } from '../action-log/factory';
+import { ActionLogDataWithoutTime } from '../action';
+import { createAction, getActionChances } from '../action/factory';
 import { MatchSimulatorStateOptions } from './match-simulator-state';
 import { MatchSimulatorUpdater } from './match-simulator-updater';
 
@@ -21,13 +21,21 @@ export class MatchSimulator extends MatchSimulatorUpdater {
     const matchPeriodSecs = MATCH_PERIOD_MS / 1000;
 
     for (let period = 0; period < MATCH_PERIODS; period++) {
+      // period start
       this.do({
         type: period === 0 ? 'MatchStart' : 'PeriodStart',
         playerRef: this.getRandomPlayer()!.getRef(),
-      });
+      } as ActionLogDataWithoutTime<'MatchStart' | 'PeriodStart'>);
 
-      this.runPeriodMainActions(matchPeriodSecs);
+      // period actions
+      while (this.time < matchPeriodSecs) {
+        const actionType = getActionChances(this).pick(this.rng)!;
+        const action = createAction(actionType);
+        const actionLogs = action.run(this, this.rng);
+        actionLogs.forEach((actionData) => this.do(actionData));
+      }
 
+      // period end
       this.do({
         type: period === MATCH_PERIODS - 1 ? 'MatchEnd' : 'PeriodEnd',
       });
@@ -38,49 +46,6 @@ export class MatchSimulator extends MatchSimulatorUpdater {
     this.do({
       type: 'TieBreak',
       teamRef: this.getRandomTeam().getRef(),
-    });
-  }
-
-  public reset(options?: MatchSimulatorRunOptions): void {
-    super.reset(options);
-    this.time = 0;
-  }
-
-  protected runPeriodMainActions(matchPeriodSecs: number): void {
-    while (this.time < matchPeriodSecs) {
-      const action = this.selectNextActionType();
-
-      if (action === 'Goal') {
-        this.do({
-          type: 'Goal',
-        });
-        continue;
-      }
-
-      if (action === 'Pass') {
-        const currentPlayer = this.getPlayer(this.possession)!;
-        const toPlayer = this.getRandomPlayer({
-          team: this.getAttackingTeam(),
-          filter: (player) => player !== currentPlayer,
-        })!;
-        this.do({
-          type: 'Pass',
-          from: this.possession!.getRef(),
-          to: toPlayer.getRef(),
-        });
-        continue;
-      }
-
-      if (action === 'SwitchPossession') {
-        this.do({
-          type: 'SwitchPossession',
-        });
-        continue;
-      }
-    }
-  }
-
-  protected selectNextActionType(): MatchActionLogType {
-    return getActionLogChances(this).pick(this.rng)!;
+    } as ActionLogDataWithoutTime<'TieBreak'>);
   }
 }

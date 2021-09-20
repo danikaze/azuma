@@ -1,7 +1,7 @@
 import { Match } from '@model/match/interfaces';
 import { MATCH_PERIODS, MATCH_PERIOD_MS } from '@utils/constants/game';
-import { MatchActionType } from '../actions';
-import { getActionChances } from '../actions/factory';
+import { MatchActionLogType } from '../action-log';
+import { getActionLogChances } from '../action-log/factory';
 import { MatchSimulatorStateOptions } from './match-simulator-state';
 import { MatchSimulatorUpdater } from './match-simulator-updater';
 
@@ -80,7 +80,7 @@ export class MatchSimulator extends MatchSimulatorUpdater {
     }
   }
 
-  protected selectNextActionType(): MatchActionType {
-    return getActionChances(this).pick(this.rng)!;
+  protected selectNextActionType(): MatchActionLogType {
+    return getActionLogChances(this).pick(this.rng)!;
   }
 }

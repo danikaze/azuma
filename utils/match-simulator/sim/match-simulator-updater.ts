@@ -6,12 +6,16 @@ import {
 } from '@utils/constants/game';
 import { getLogger } from '@utils/logger';
 import { MatchActionData } from '..';
-import { MatchAction, MatchActionDataMap, MatchActionType } from '../actions';
-import { MatchEndData } from '../actions/match-end';
-import { MatchStartData } from '../actions/match-start';
-import { PeriodEndData } from '../actions/period-end';
-import { PeriodStartData } from '../actions/period-start';
-import { TieBreakData } from '../actions/tie-break';
+import {
+  MatchActionLog,
+  MatchActionLogDataMap,
+  MatchActionLogType,
+} from '../action-log';
+import { MatchEndData } from '../action-log/match-end';
+import { MatchStartData } from '../action-log/match-start';
+import { PeriodEndData } from '../action-log/period-end';
+import { PeriodStartData } from '../action-log/period-start';
+import { TieBreakData } from '../action-log/tie-break';
 import {
   FieldSection,
   FieldSectionSide,
@@ -23,7 +27,7 @@ import { SimPlayer, SimPlayerRef } from './player';
 import { SimTeamRef } from './team';
 
 type ActionsWithoutTime = {
-  [K in keyof MatchActionDataMap]: Omit<MatchActionDataMap[K], 'time'>;
+  [K in keyof MatchActionLogDataMap]: Omit<MatchActionLogDataMap[K], 'time'>;
 };
 
 /**
@@ -80,11 +84,11 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     const log = this.log;
     this.reset();
     MatchSimulatorUpdater.getActions(log, ellapsedMs).forEach((actionData) =>
-      this.update(this.createAction(actionData))
+      this.update(this.createActionLog(actionData))
     );
   }
 
-  public update(action: MatchAction<MatchActionType>): void {
+  public update(action: MatchActionLog<MatchActionLogType>): void {
     if (!IS_PRODUCTION) {
       Object.entries(action.data).forEach(([key, value]) => {
         if (JSON.stringify(value) === undefined) {
@@ -156,10 +160,10 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
   protected do<T extends keyof ActionsWithoutTime>(
     data: ActionsWithoutTime[T]
   ): void {
-    const action = this.createAction({
+    const action = this.createActionLog({
       ...data,
       time: this.time,
-    } as MatchActionDataMap[T]);
+    } as MatchActionLogDataMap[T]);
     this.update(action);
     this.time += action.duration;
   }

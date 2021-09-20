@@ -1,8 +1,8 @@
 import { Match } from '@model/match/interfaces';
-import { MatchActionDataMap, MatchActionType } from './actions';
+import { MatchActionLogDataMap, MatchActionLogType } from './action-log';
 import { MatchSimulator } from './sim';
 
-export type MatchActionData = MatchActionDataMap[MatchActionType];
+export type MatchActionData = MatchActionLogDataMap[MatchActionLogType];
 
 export type SimulateMatchResult = Required<
   Pick<Match, 'homeScore' | 'awayScore' | 'log'>

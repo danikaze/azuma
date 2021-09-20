@@ -1,6 +1,6 @@
 import { Rng } from '@utils/rng';
 import { WeightedOptions } from '@utils/rng/weighted-options';
-import { MatchActionDataMap, MatchAction, MatchActionType } from '.';
+import { MatchActionLogDataMap, MatchActionLog, MatchActionLogType } from '.';
 import { MatchSimulatorQuerier } from '../sim/match-simulator-querier';
 import { Goal } from './goal';
 import { MatchEnd } from './match-end';
@@ -33,44 +33,46 @@ const randomActionDefTypes = Object.keys(actionDef).filter(
     ].includes(type)
 );
 
-type ManuallySelectedMatchActionType =
+type ManuallySelectedMatchActionLogType =
   | 'MatchStart'
   | 'MatchEnd'
   | 'PeriodStart'
   | 'PeriodEnd'
   | 'TieBreak';
 
-export type ActionCreator = <T extends keyof MatchActionDataMap>(
-  data: MatchActionDataMap[T]
-) => MatchAction<T>;
+export type ActionLogCreator = <T extends keyof MatchActionLogDataMap>(
+  data: MatchActionLogDataMap[T]
+) => MatchActionLog<T>;
 
 export type PossibleRandomMatchActionType = Exclude<
-  MatchActionType,
-  ManuallySelectedMatchActionType
+  MatchActionLogType,
+  ManuallySelectedMatchActionLogType
 >;
 
-export function getActionFactory(rng: Rng): ActionCreator {
+export function getActionLogFactory(rng: Rng): ActionLogCreator {
   /**
    * Creates a MatchAction based on the data type
    */
-  return function createAction<T extends keyof MatchActionDataMap>(
-    data: MatchActionDataMap[T]
-  ): MatchAction<T> {
+  const createActionLog = <T extends keyof MatchActionLogDataMap>(
+    data: MatchActionLogDataMap[T]
+  ) => {
     const Action = actionDef[data.type];
     if (!Action) {
       throw new Error(`Action type "${data.type}" is not defined`);
     }
     const duration = rng.integer(
-      (Action as typeof MatchAction).minDuration,
-      (Action as typeof MatchAction).maxDuration
+      (Action as typeof MatchActionLog).minDuration,
+      (Action as typeof MatchActionLog).maxDuration
     );
 
     // tslint:disable-next-line:no-any
-    return new Action(data as any, duration) as MatchAction<T>;
+    return new Action(data as any, duration) as MatchActionLog<T>;
   };
+
+  return createActionLog;
 }
 
-export function getActionChances(
+export function getActionLogChances(
   sim: MatchSimulatorQuerier
 ): WeightedOptions<PossibleRandomMatchActionType> {
   const weights = randomActionDefTypes.map((type) => ({

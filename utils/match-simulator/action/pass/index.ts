@@ -15,12 +15,28 @@ export class Pass extends MatchAction {
       filter: (player) => player !== currentPlayer,
     })!;
 
-    const pass: ActionLogDataWithoutTime<'Pass'> = {
-      type: 'Pass',
-      from: currentPlayer.getRef(),
-      to: toPlayer.getRef(),
-    };
+    const cutBy = sim.getRandomPlayer({
+      team: sim.getDefendingTeam(),
+      filter: (player) => player.position !== 'GK',
+    });
 
-    return [pass];
+    const passSuccess =
+      !cutBy ||
+      currentPlayer.skillRoll(rng, 'pass') > cutBy.skillRoll(rng, 'defense');
+
+    const action = passSuccess
+      ? ({
+          type: 'Pass',
+          from: currentPlayer.getRef(),
+          to: toPlayer.getRef(),
+        } as ActionLogDataWithoutTime<'Pass'>)
+      : ({
+          type: 'PassCut',
+          from: currentPlayer.getRef(),
+          to: toPlayer.getRef(),
+          cutBy: cutBy.getRef(),
+        } as ActionLogDataWithoutTime<'PassCut'>);
+
+    return [action];
   }
 }

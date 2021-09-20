@@ -1,8 +1,8 @@
 import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
 import { SimPlayerRef } from '@utils/match-simulator/sim/player';
-import { MatchActionBaseData, MatchActionLog } from '..';
+import { MatchActionLog, MatchActionLogBaseData } from '..';
 
-export interface MatchStartData extends MatchActionBaseData<'MatchStart'> {
+export interface MatchStartData extends MatchActionLogBaseData<'MatchStart'> {
   playerRef: SimPlayerRef;
 }
 

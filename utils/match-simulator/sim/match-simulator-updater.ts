@@ -6,11 +6,13 @@ import {
 } from '@utils/constants/game';
 import { getLogger } from '@utils/logger';
 import { MatchActionData } from '..';
+import { ActionLogDataWithoutTime } from '../action';
 import {
   MatchActionLog,
   MatchActionLogDataMap,
   MatchActionLogType,
 } from '../action-log';
+import { createActionLog } from '../action-log/factory';
 import { MatchEndData } from '../action-log/match-end';
 import { MatchStartData } from '../action-log/match-start';
 import { PeriodEndData } from '../action-log/period-end';
@@ -25,10 +27,6 @@ import {
 import { MatchSimulatorQuerier } from './match-simulator-querier';
 import { SimPlayer, SimPlayerRef } from './player';
 import { SimTeamRef } from './team';
-
-type ActionsWithoutTime = {
-  [K in keyof MatchActionLogDataMap]: Omit<MatchActionLogDataMap[K], 'time'>;
-};
 
 /**
  * Top layer over the Match data that allows to update the state
@@ -84,7 +82,7 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     const log = this.log;
     this.reset();
     MatchSimulatorUpdater.getActions(log, ellapsedMs).forEach((actionData) =>
-      this.update(this.createActionLog(actionData))
+      this.update(createActionLog(this.rng, actionData))
     );
   }
 
@@ -157,10 +155,10 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     this.addScore(action.teamRef, GOAL_SCORE / 2);
   }
 
-  protected do<T extends keyof ActionsWithoutTime>(
-    data: ActionsWithoutTime[T]
+  protected do<T extends MatchActionLogType>(
+    data: ActionLogDataWithoutTime<T>
   ): void {
-    const action = this.createActionLog({
+    const action = createActionLog(this.rng, {
       ...data,
       time: this.time,
     } as MatchActionLogDataMap[T]);

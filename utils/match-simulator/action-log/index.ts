@@ -1,4 +1,3 @@
-import { MatchSimulatorQuerier } from '../sim/match-simulator-querier';
 import { MatchSimulatorUpdater } from '../sim/match-simulator-updater';
 import { GoalData } from './goal';
 import { MatchEndData } from './match-end';
@@ -27,7 +26,7 @@ export type MatchActionLogType = keyof MatchActionLogDataMap;
  * `SimPlayer` or `SimTeam`.
  * Use references like `SimPlayerRef` and `SimTeamRef` instead.
  */
-export interface MatchActionBaseData<
+export interface MatchActionLogBaseData<
   T extends MatchActionLogType = MatchActionLogType
 > {
   /** Type of the action */
@@ -60,17 +59,6 @@ export abstract class MatchActionLog<T extends MatchActionLogType> {
 
     this.data = data;
     this.duration = duration;
-  }
-
-  /**
-   * By default all actions have a chance of "100" to get picked but overriding
-   * this method gives the opportunity to customize it depending on the state
-   * of the match.
-   * i.e. players shouldn't score a goal if they are in their field, so it
-   * returns `0` in that cases
-   */
-  public static getChances(sim: MatchSimulatorQuerier): number {
-    return MatchActionLog.DEFAULT_ACTION_CHANCES;
   }
 
   public abstract run(sim: MatchSimulatorUpdater): void;

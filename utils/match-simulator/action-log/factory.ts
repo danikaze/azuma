@@ -1,7 +1,5 @@
 import { Rng } from '@utils/rng';
-import { WeightedOptions } from '@utils/rng/weighted-options';
-import { MatchActionLogDataMap, MatchActionLog, MatchActionLogType } from '.';
-import { MatchSimulatorQuerier } from '../sim/match-simulator-querier';
+import { MatchActionLog, MatchActionLogDataMap, MatchActionLogType } from '.';
 import { Goal } from './goal';
 import { MatchEnd } from './match-end';
 import { MatchStart } from './match-start';
@@ -22,17 +20,6 @@ const actionDef = {
   TieBreak,
 } as const;
 
-const randomActionDefTypes = Object.keys(actionDef).filter(
-  (type) =>
-    ![
-      'MatchStart',
-      'MatchEnd',
-      'PeriodStart',
-      'PeriodEnd',
-      'TieBreak',
-    ].includes(type)
-);
-
 type ManuallySelectedMatchActionLogType =
   | 'MatchStart'
   | 'MatchEnd'
@@ -40,7 +27,7 @@ type ManuallySelectedMatchActionLogType =
   | 'PeriodEnd'
   | 'TieBreak';
 
-export type ActionLogCreator = <T extends keyof MatchActionLogDataMap>(
+export type ActionLogCreator = <T extends MatchActionLogType>(
   data: MatchActionLogDataMap[T]
 ) => MatchActionLog<T>;
 
@@ -49,36 +36,22 @@ export type PossibleRandomMatchActionType = Exclude<
   ManuallySelectedMatchActionLogType
 >;
 
-export function getActionLogFactory(rng: Rng): ActionLogCreator {
-  /**
-   * Creates a MatchAction based on the data type
-   */
-  const createActionLog = <T extends keyof MatchActionLogDataMap>(
-    data: MatchActionLogDataMap[T]
-  ) => {
-    const Action = actionDef[data.type];
-    if (!Action) {
-      throw new Error(`Action type "${data.type}" is not defined`);
-    }
-    const duration = rng.integer(
-      (Action as typeof MatchActionLog).minDuration,
-      (Action as typeof MatchActionLog).maxDuration
-    );
+/**
+ * Creates a MatchActionLog based on the data type
+ */
+export function createActionLog<T extends MatchActionLogType>(
+  rng: Rng,
+  data: MatchActionLogDataMap[T]
+): MatchActionLog<T> {
+  const Action = actionDef[data.type];
+  if (!Action) {
+    throw new Error(`Action type "${data.type}" is not defined`);
+  }
+  const duration = rng.integer(
+    (Action as typeof MatchActionLog).minDuration,
+    (Action as typeof MatchActionLog).maxDuration
+  );
 
-    // tslint:disable-next-line:no-any
-    return new Action(data as any, duration) as MatchActionLog<T>;
-  };
-
-  return createActionLog;
-}
-
-export function getActionLogChances(
-  sim: MatchSimulatorQuerier
-): WeightedOptions<PossibleRandomMatchActionType> {
-  const weights = randomActionDefTypes.map((type) => ({
-    data: type as PossibleRandomMatchActionType,
-    weight: actionDef[type as PossibleRandomMatchActionType].getChances(sim),
-  }));
-
-  return new WeightedOptions<PossibleRandomMatchActionType>(weights);
+  // tslint:disable-next-line:no-any
+  return new Action(data as any, duration) as MatchActionLog<T>;
 }

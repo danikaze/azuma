@@ -1,13 +1,13 @@
-import { MatchSimulatorState } from './match-simulator-state';
 import { SimulateMatchResult } from '..';
-import { SimTeam, SimTeamGetRandomPlayerOptions, SimTeamRef } from './team';
-import { SimPlayer, SimPlayerRef } from './player';
 import {
   FieldPosition,
   SIM_PLAYER_REF_I_TEAM,
   SIM_TEAM_REF_I_AWAY,
   SIM_TEAM_REF_I_HOME,
 } from './constants';
+import { MatchSimulatorState } from './match-simulator-state';
+import { SimPlayer, SimPlayerRef } from './player';
+import { SimTeam, SimTeamGetRandomPlayerOptions, SimTeamRef } from './team';
 
 /**
  * Wraps the raw data of a match and provides public accesors via methods
@@ -20,6 +20,10 @@ export class MatchSimulatorQuerier extends MatchSimulatorState {
       log: this.log,
       actions: this.actions,
     };
+  }
+
+  public getPossessionPlayer(): SimPlayer | undefined {
+    return this.possession;
   }
 
   public getBallPosition(): FieldPosition {
@@ -53,11 +57,11 @@ export class MatchSimulatorQuerier extends MatchSimulatorState {
     return this.teams[0] === this.possession.team ? 1 : 0;
   }
 
-  protected getRandomTeam(): SimTeam {
+  public getRandomTeam(): SimTeam {
     return this.teams[this.rng.integer(0, 1)];
   }
 
-  protected getRandomPlayer(
+  public getRandomPlayer(
     options: { team?: SimTeam } & SimTeamGetRandomPlayerOptions = {}
   ): SimPlayer | undefined {
     const team = options.team || this.getRandomTeam();

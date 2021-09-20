@@ -1,7 +1,7 @@
 import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
-import { MatchActionBaseData, MatchActionLog } from '..';
+import { MatchActionLog, MatchActionLogBaseData } from '..';
 
-export interface MatchEndData extends MatchActionBaseData<'MatchEnd'> {}
+export interface MatchEndData extends MatchActionLogBaseData<'MatchEnd'> {}
 
 export class MatchEnd extends MatchActionLog<'MatchEnd'> {
   public static readonly minDuration = 0;

@@ -2,7 +2,6 @@ import { Match } from '@model/match/interfaces';
 import { MATCH_PERIODS } from '@utils/constants/game';
 import { Rng } from '@utils/rng';
 import { MatchActionData } from '..';
-import { ActionLogCreator, getActionLogFactory } from '../action-log/factory';
 import {
   FieldPosition,
   FieldSection,
@@ -22,7 +21,6 @@ export interface MatchSimulatorStateOptions {
  */
 export class MatchSimulatorState {
   protected rng!: Rng;
-  protected createActionLog!: ActionLogCreator;
 
   protected readonly teams: [SimTeam, SimTeam];
   protected score!: [homeTeamScore: number, awayTeamScore: number];
@@ -53,7 +51,6 @@ export class MatchSimulatorState {
     this.rng = options?.rngSeed
       ? new Rng({ seed: options.rngSeed })
       : new Rng();
-    this.createActionLog = getActionLogFactory(this.rng);
 
     this.time = 0;
     this.period = 0;

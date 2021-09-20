@@ -7,11 +7,11 @@ import {
 import { MatchSimulatorQuerier } from '@utils/match-simulator/sim/match-simulator-querier';
 import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
 import { SimTeamRef } from '@utils/match-simulator/sim/team';
-import { MatchActionBaseData, MatchAction } from '..';
+import { MatchActionBaseData, MatchActionLog } from '..';
 
 export interface GoalData extends MatchActionBaseData<'Goal'> {}
 
-export class Goal extends MatchAction<'Goal'> {
+export class Goal extends MatchActionLog<'Goal'> {
   public static readonly minDuration = 15;
   public static readonly maxDuration = 30;
 

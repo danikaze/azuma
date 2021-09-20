@@ -9,7 +9,7 @@ import { PeriodStartData } from './period-start';
 import { SwitchPossessionData } from './switch-posession';
 import { TieBreakData } from './tie-break';
 
-export interface MatchActionDataMap {
+export interface MatchActionLogDataMap {
   Goal: GoalData;
   MatchEnd: MatchEndData;
   MatchStart: MatchStartData;
@@ -20,7 +20,7 @@ export interface MatchActionDataMap {
   TieBreak: TieBreakData;
 }
 
-export type MatchActionType = keyof MatchActionDataMap;
+export type MatchActionLogType = keyof MatchActionLogDataMap;
 
 /*
  * NOTE: To make actions serializables, do NOT use objects such as
@@ -28,7 +28,7 @@ export type MatchActionType = keyof MatchActionDataMap;
  * Use references like `SimPlayerRef` and `SimTeamRef` instead.
  */
 export interface MatchActionBaseData<
-  T extends MatchActionType = MatchActionType
+  T extends MatchActionLogType = MatchActionLogType
 > {
   /** Type of the action */
   type: T;
@@ -36,7 +36,7 @@ export interface MatchActionBaseData<
   time: number;
 }
 
-export abstract class MatchAction<T extends MatchActionType> {
+export abstract class MatchActionLog<T extends MatchActionLogType> {
   /** Minimum duration of the action in seconds */
   public static readonly minDuration: number = -1;
   /** Maximum duration of the action in seconds */
@@ -44,14 +44,14 @@ export abstract class MatchAction<T extends MatchActionType> {
 
   protected static readonly DEFAULT_ACTION_CHANCES = 100;
 
-  public readonly data: MatchActionDataMap[T];
+  public readonly data: MatchActionLogDataMap[T];
   public readonly duration: number;
 
-  constructor(data: MatchActionDataMap[T], duration: number) {
+  constructor(data: MatchActionLogDataMap[T], duration: number) {
     if (
       !IS_PRODUCTION &&
-      ((this.constructor as typeof MatchAction).minDuration === -1 ||
-        (this.constructor as typeof MatchAction).maxDuration === -1)
+      ((this.constructor as typeof MatchActionLog).minDuration === -1 ||
+        (this.constructor as typeof MatchActionLog).maxDuration === -1)
     ) {
       throw new Error(
         `Action "${data.type}" doesn't have proper duration defined`
@@ -70,7 +70,7 @@ export abstract class MatchAction<T extends MatchActionType> {
    * returns `0` in that cases
    */
   public static getChances(sim: MatchSimulatorQuerier): number {
-    return MatchAction.DEFAULT_ACTION_CHANCES;
+    return MatchActionLog.DEFAULT_ACTION_CHANCES;
   }
 
   public abstract run(sim: MatchSimulatorUpdater): void;

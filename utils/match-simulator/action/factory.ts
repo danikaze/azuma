@@ -1,12 +1,16 @@
 import { WeightedOptions } from '@utils/rng/weighted-options';
 import { MatchAction } from '.';
 import { MatchSimulatorQuerier } from '../sim/match-simulator-querier';
+import { Dribble } from './dribble';
 import { Pass } from './pass';
+import { RecoverLostBall } from './recover-lost-ball';
 import { Shoot } from './shoot';
 
 const actionDef = {
-  Shoot,
+  Dribble,
   Pass,
+  RecoverLostBall,
+  Shoot,
 };
 
 export type MatchActionType = keyof typeof actionDef;

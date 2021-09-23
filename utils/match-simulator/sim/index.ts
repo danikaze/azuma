@@ -29,7 +29,12 @@ export class MatchSimulator extends MatchSimulatorUpdater {
 
       // period actions
       while (this.time < matchPeriodSecs) {
-        const actionType = getActionChances(this).pick(this.rng)!;
+        const actionType = getActionChances(this).pick(this.rng);
+
+        if (!actionType) {
+          throw new Error('No action available with the current Sim status');
+        }
+
         const action = createAction(actionType);
         const actionLogs = action.run(this, this.rng);
         actionLogs.forEach((actionData) => this.do(actionData));

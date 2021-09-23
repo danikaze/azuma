@@ -121,16 +121,6 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
 
   public endMatch(action: MatchEndData): void {}
 
-  public switchPossession(): void {
-    if (!this.possession) {
-      this.possession = this.getRandomPlayer()!;
-      return;
-    }
-    this.possession = this.getRandomPlayer({
-      team: this.getDefendingTeam(),
-    })!;
-  }
-
   public setPossession(player: SimPlayer | SimPlayerRef | undefined): void {
     const MAX_SECTOR_INDEX = 4;
     this.possession = this.getPlayer(player);
@@ -153,6 +143,30 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
 
   public untie(action: TieBreakData) {
     this.addScore(action.teamRef, GOAL_SCORE / 2);
+  }
+
+  public injury(
+    player: SimPlayer | SimPlayerRef | undefined,
+    time: number
+  ): void {
+    this.getPlayer(player)!.setState('injury', time);
+  }
+
+  public substitute(
+    getsOut: SimPlayer | SimPlayerRef,
+    getsIn: SimPlayer | SimPlayerRef
+  ): void {
+    const exitingPlayer = this.getPlayer(getsOut)!;
+    const enteringPlayer = this.getPlayer(getsIn)!;
+
+    if (exitingPlayer.team !== enteringPlayer.team) {
+      throw new Error(`Can't substitute players from different teams`);
+    }
+
+    exitingPlayer.team.substitute(
+      exitingPlayer.getRef(),
+      enteringPlayer.getRef()
+    );
   }
 
   protected do<T extends MatchActionLogType>(

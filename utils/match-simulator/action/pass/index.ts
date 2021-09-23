@@ -17,7 +17,7 @@ export class Pass extends MatchAction {
 
     const cutBy = sim.getRandomPlayer({
       team: sim.getDefendingTeam(),
-      filter: (player) => player.position !== 'GK',
+      filter: (player) => player.getPosition() !== 'GK',
     });
 
     const passSuccess =
@@ -34,7 +34,7 @@ export class Pass extends MatchAction {
           type: 'PassCut',
           from: currentPlayer.getRef(),
           to: toPlayer.getRef(),
-          cutBy: cutBy.getRef(),
+          cutBy: cutBy!.getRef(),
         } as ActionLogDataWithoutTime<'PassCut'>);
 
     return [action];

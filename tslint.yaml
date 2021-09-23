@@ -188,6 +188,7 @@ rules:
     - -1
     - 1
     - 2
+    - 100
     - 1000
 
   # https://github.com/buzinas/tslint-eslint-rules/blob/master/src/docs/rules/terIndentRule.md

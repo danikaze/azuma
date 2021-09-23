@@ -1,23 +1,41 @@
 import { MatchSimulatorUpdater } from '../sim/match-simulator-updater';
-import { GoalData } from './goal';
+import { SubstitutionData } from './substitution';
+import { DribbleData } from './dribble';
+import { DribbleCutData } from './dribble-cut';
+import { FaulWithInjuryData } from './faul-with-injury';
+import { FaulWithoutInjuryData } from './faul-without-injury';
+import { InjuryData } from './injury';
 import { MatchEndData } from './match-end';
 import { MatchStartData } from './match-start';
 import { PassData } from './pass';
 import { PassCutData } from './pass-cut';
 import { PeriodEndData } from './period-end';
 import { PeriodStartData } from './period-start';
-import { SwitchPossessionData } from './switch-posession';
+import { RecoverLostBallData } from './recover-lost-ball';
+import { ShootBlockedData } from './shoot-blocked';
+import { ShootGoalData } from './shoot-goal';
+import { ShootMissData } from './shoot-miss';
+import { ShootRejectedData } from './shoot-rejected';
 import { TieBreakData } from './tie-break';
 
 export interface MatchActionLogDataMap {
-  Goal: GoalData;
+  Substitution: SubstitutionData;
+  Dribble: DribbleData;
+  DribbleCut: DribbleCutData;
+  FaulWithInjury: FaulWithInjuryData;
+  FaulWithoutInjury: FaulWithoutInjuryData;
+  Injury: InjuryData;
   MatchEnd: MatchEndData;
   MatchStart: MatchStartData;
   Pass: PassData;
   PassCut: PassCutData;
   PeriodEnd: PeriodEndData;
   PeriodStart: PeriodStartData;
-  SwitchPossession: SwitchPossessionData;
+  RecoverLostBall: RecoverLostBallData;
+  ShootBlocked: ShootBlockedData;
+  ShootGoal: ShootGoalData;
+  ShootMiss: ShootMissData;
+  ShootRejected: ShootRejectedData;
   TieBreak: TieBreakData;
 }
 

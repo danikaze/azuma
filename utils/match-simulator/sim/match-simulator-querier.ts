@@ -66,7 +66,7 @@ export class MatchSimulatorQuerier extends MatchSimulatorState {
   ): SimPlayer | undefined {
     const team = options.team || this.getRandomTeam();
 
-    return team.getRandomPlayer(this.rng, options)!;
+    return team.getRandomPlayer(this.rng, options);
   }
 
   protected getTeam(team: SimTeam | SimTeamRef): SimTeam {

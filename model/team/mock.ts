@@ -2,7 +2,7 @@ import { TimestampData } from '@model';
 import { mockPlayers } from '@model/player/mock';
 import { LEAGUE_TEAMS, TeamsPerLeague } from '@utils/constants/game';
 import { getMilliseconds } from '@utils/jikan';
-import { Team } from './interfaces';
+import { Formation, FormationLinePosition, Team } from './interfaces';
 
 export const mockTeams = (() => {
   const teams: Team[] = [];
@@ -79,9 +79,15 @@ export const mockTeams = (() => {
         position: player.position,
       }));
 
+    const formation: Formation = {
+      positions: ['GK', 'LB', 'RB', 'CMF', 'LF', 'CF', 'RF'],
+      linePosition: FormationLinePosition.NORMAL,
+    };
+
     n++;
     const team: Team = {
       players,
+      formation,
       teamId: `mock-team-${t}`,
       image: `team-${t}-logo.png`,
       ...fixedData[t],

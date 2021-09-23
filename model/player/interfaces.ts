@@ -34,10 +34,10 @@ export interface Player extends TimestampData {
 
 export type PlayerGenre = 'm' | 'f';
 export type DominantHand = 'left' | 'right' | 'both';
-export type AlteredStatus = 'dead' | 'lucky' | 'stunned' | 'blind';
+export type AlteredState = 'injury';
 
 export interface PlayerAlteredState {
-  type: AlteredStatus;
+  type: AlteredState;
   secondsLeft: number;
 }
 

@@ -1,16 +1,20 @@
 export const PLAYER_SKILLS = [
+  // ingame general skills
   'speed',
-  'constitution',
   'stamina',
-  'power',
+  'constitution',
+  'luck',
+  // ingame specific skills
   'aggresivity',
-  'charisma',
-  'show',
+  'dribble',
   'shoot',
-  'pass',
-  'defense',
-  'fight',
   'goalkeeper',
+  'fight',
+  'defense',
+  'pass',
+  // offline skills
+  'show',
+  'charisma',
 ] as const;
 
 export const PLAYER_POSITIONS = [

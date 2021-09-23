@@ -37,10 +37,67 @@ export class Shoot extends MatchAction {
   }
 
   public run(sim: MatchSimulatorQuerier, rng: Rng): ActionLogDataWithoutTime[] {
-    const goal: ActionLogDataWithoutTime<'Goal'> = {
-      type: 'Goal',
-    };
+    const shooter = sim.getPossessionPlayer()!;
+    const keeper = sim.getRandomPlayer({
+      team: sim.getDefendingTeam(),
+      filter: (player) => player.getPosition() === 'GK',
+    })!;
 
-    return [goal];
+    const isShortDistance = (() => {
+      const ballPosition = sim.getBallPosition();
+      return (
+        ballPosition[0] === FieldSection.HOME_TEAM_GOAL ||
+        ballPosition[0] === FieldSection.AWAY_TEAM_GOAL
+      );
+    })();
+
+    const shootGoesIn = shooter.skillCheck(
+      rng,
+      'shoot',
+      isShortDistance
+        ? MatchAction.DC_SHOOT_LONG_IN_GOAL
+        : MatchAction.DC_SHOOT_LONG_IN_GOAL
+    );
+
+    if (!shootGoesIn) {
+      return [
+        {
+          type: 'ShootMiss',
+          shooter: shooter.getRef(),
+          keeper: keeper.getRef(),
+        } as ActionLogDataWithoutTime<'ShootMiss'>,
+      ];
+    }
+
+    const shootRoll = shooter.skillRoll(rng, 'shoot');
+    const gkRoll = keeper.skillRoll(rng, 'goalkeeper');
+
+    if (shootRoll > gkRoll) {
+      return [
+        {
+          type: 'ShootGoal',
+          shooter: shooter.getRef(),
+          keeper: keeper.getRef(),
+        } as ActionLogDataWithoutTime<'ShootGoal'>,
+      ];
+    }
+
+    if (shootRoll + MatchAction.DC_DIFF_SHOOT_BLOCK < gkRoll) {
+      return [
+        {
+          type: 'ShootBlocked',
+          shooter: shooter.getRef(),
+          keeper: keeper.getRef(),
+        } as ActionLogDataWithoutTime<'ShootBlocked'>,
+      ];
+    }
+
+    return [
+      {
+        type: 'ShootRejected',
+        shooter: shooter.getRef(),
+        keeper: keeper.getRef(),
+      } as ActionLogDataWithoutTime<'ShootRejected'>,
+    ];
   }
 }

@@ -18,6 +18,8 @@ export interface Team extends TimestampData {
 
   /** List of players */
   players: PlayerInTeam[];
+  /** Current formation */
+  formation: Formation;
 
   /** Position in the table */
   pos: number;
@@ -38,14 +40,8 @@ export interface Team extends TimestampData {
 }
 
 export interface Formation {
-  // tslint:disable-next-line: no-magic-numbers
   positions: FormationPositions;
   linePosition: FormationLinePosition;
-  mod: {
-    defense: number;
-    pass: number;
-    shoot: number;
-  };
 }
 
 export enum FormationLinePosition {
@@ -56,14 +52,16 @@ export enum FormationLinePosition {
   FULL_ATACK = 2,
 }
 
+type PlayerPositionNoGK = Exclude<PlayerPosition, 'GK'>;
+
 export type FormationPositions = readonly [
   'GK',
-  PlayerPosition,
-  PlayerPosition,
-  PlayerPosition,
-  PlayerPosition,
-  PlayerPosition,
-  PlayerPosition
+  PlayerPositionNoGK,
+  PlayerPositionNoGK,
+  PlayerPositionNoGK,
+  PlayerPositionNoGK,
+  PlayerPositionNoGK,
+  PlayerPositionNoGK
 ];
 
 export interface PlayerInTeam {

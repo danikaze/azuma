@@ -1,4 +1,4 @@
-import { Team } from '@model/team/interfaces';
+import { Formation, Team } from '@model/team/interfaces';
 import { TEAM_PLAYERS } from '@utils/constants/game';
 import { replaceInArray } from '@utils/replace-in-array';
 import { Rng } from '@utils/rng';
@@ -20,12 +20,15 @@ export interface SimTeamGetRandomPlayerOptions {
 
 export class SimTeam {
   public readonly index: SimTeamRef;
+  public readonly formation: Formation;
+
   protected readonly roster: SimPlayer[];
   protected readonly activePlayers: SimPlayer[];
   protected readonly substitutePlayers: SimPlayer[];
 
   constructor(team: Team, index: SimTeamRef) {
     this.index = index;
+    this.formation = { ...team.formation };
     this.roster = team.players.map(
       (player, i) => new SimPlayer(this, player, i)
     );
@@ -68,15 +71,28 @@ export class SimTeam {
     return rng.pick(players);
   }
 
-  public substitute(getsOut: number, getsIn: number): void {
-    const getsOutPlayer = this.roster[getsOut];
-    const getsInPlayer = this.roster[getsIn];
+  public substitute(getsOutRef: SimPlayerRef, getsInRef: SimPlayerRef): void {
+    const getsOutPlayer = this.roster[getsOutRef[SIM_PLAYER_REF_I_PLAYER]];
+    const getsInPlayer = this.roster[getsInRef[SIM_PLAYER_REF_I_PLAYER]];
 
     if (!getsOutPlayer || !getsInPlayer) {
       throw new Error('Player not found');
     }
 
+    if (
+      !IS_PRODUCTION &&
+      (this.activePlayers.includes(getsInPlayer) ||
+        this.substitutePlayers.includes(getsOutPlayer))
+    ) {
+      throw new Error(
+        'Looks like substitute has been invoked with the parameters switched'
+      );
+    }
+
     replaceInArray(this.activePlayers, getsOutPlayer, getsInPlayer);
     replaceInArray(this.substitutePlayers, getsInPlayer, getsOutPlayer);
+
+    getsInPlayer.setPosition(getsOutPlayer.getPosition());
+    getsOutPlayer.setPosition(undefined);
   }
 }

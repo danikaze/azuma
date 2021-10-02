@@ -1,4 +1,4 @@
 export const comments = [
-  'What a hard attempt from {{defender.name}} to steal the ball, but {{attacker.name}} escapes like nothing!',
-  '{{attacker.name}} faces {{defender.name}} and easily leaves him behind',
+  'What a hard attempt from {{defender}} to steal the ball, but {{attacker}} escapes like nothing!',
+  '{{attacker}} faces {{defender}} and easily leaves him behind',
 ];

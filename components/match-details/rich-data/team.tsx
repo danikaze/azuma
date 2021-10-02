@@ -6,19 +6,12 @@ import styles from './rich-data.module.scss';
 
 export type Props = {
   fullPath?: string;
-  type: 'name';
   data: TeamCommentData;
 };
 
-export const MatchDetailsRichDataTeam: FC<Props> = ({
-  fullPath,
-  type,
-  data,
-}) => {
+export const MatchDetailsRichDataTeam: FC<Props> = ({ fullPath, data }) => {
   try {
-    const content = data[type];
-
-    return <div className={clsx(styles.root, styles.team)}>{content}</div>;
+    return <div className={clsx(styles.root, styles.team)}>{data.name}</div>;
   } catch (e) {
     getLogger('MatchDetailsRichDataTeam').error(e, fullPath);
 

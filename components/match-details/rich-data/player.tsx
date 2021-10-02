@@ -6,19 +6,16 @@ import styles from './rich-data.module.scss';
 
 export type Props = {
   fullPath?: string;
-  type: 'name' | 'fullName' | 'number';
   data: PlayerCommentData;
 };
 
-export const MatchDetailsRichDataPlayer: FC<Props> = ({
-  fullPath,
-  type,
-  data,
-}) => {
+export const MatchDetailsRichDataPlayer: FC<Props> = ({ fullPath, data }) => {
   try {
-    const content = data[type];
-
-    return <div className={clsx(styles.root, styles.player)}>{content}</div>;
+    return (
+      <div className={clsx(styles.root, styles.player)}>
+        <span className={styles.number}>{data.number}</span> {data.fullName}
+      </div>
+    );
   } catch (e) {
     getLogger('MatchDetailsRichDataPlayer').error(e, fullPath);
 

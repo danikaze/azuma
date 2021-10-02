@@ -8,6 +8,14 @@
 
 .player {
   color: green;
+
+  .number {
+    background-color: green;
+    color: white;
+    padding: 0 4px;
+    font-size: smaller;
+    border-radius: 4px;
+  }
 }
 
 .team {

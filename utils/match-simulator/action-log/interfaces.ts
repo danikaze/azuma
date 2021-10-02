@@ -1,15 +1,13 @@
 import { MatchActionLogClass } from '.';
-import { SimPlayerRef } from '../sim/player';
-import { SimTeamRef } from '../sim/team';
-import { DribbleData } from './dribble';
 import { DribbleCutData } from './dribble-cut';
+import { DribbleData } from './dribble';
 import { FaulWithInjuryData } from './faul-with-injury';
 import { FaulWithoutInjuryData } from './faul-without-injury';
 import { InjuryData } from './injury';
 import { MatchEndData } from './match-end';
 import { MatchStartData } from './match-start';
-import { PassData } from './pass';
 import { PassCutData } from './pass-cut';
+import { PassData } from './pass';
 import { PeriodEndData } from './period-end';
 import { PeriodStartData } from './period-start';
 import { RecoverLostBallData } from './recover-lost-ball';
@@ -17,6 +15,8 @@ import { ShootBlockedData } from './shoot-blocked';
 import { ShootGoalData } from './shoot-goal';
 import { ShootMissData } from './shoot-miss';
 import { ShootRejectedData } from './shoot-rejected';
+import { SimPlayerRef } from '../sim/player';
+import { SimTeamRef } from '../sim/team';
 import { SubstitutionData } from './substitution';
 import { TieBreakData } from './tie-break';
 
@@ -63,6 +63,9 @@ export interface MatchActionLogData {
 }
 
 export interface MatchActionLogDataFieldMap {
+  duration: number;
+  currentPeriod: number;
+
   player: SimPlayerRef;
   playerIn: SimPlayerRef;
   playerOut: SimPlayerRef;
@@ -73,9 +76,8 @@ export interface MatchActionLogDataFieldMap {
   from?: SimPlayerRef;
   to: SimPlayerRef;
   cutBy: SimPlayerRef;
-  duration: number;
   injuriedPlayer: SimPlayerRef;
-  currentPeriod: number;
+
   winningTeam: SimTeamRef;
 }
 

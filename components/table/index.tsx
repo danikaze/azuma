@@ -14,7 +14,7 @@ export type TableRow<
 > = Record<C, ReactNode> & { [key in K]: string | number };
 
 export interface Props<C extends string = string, K extends string = string> {
-  /** List of colmums and their definitions */
+  /** List of colums and their definitions */
   columns: readonly TableColumn<C | K>[];
   /** Data to render */
   rows: readonly TableRow<C, K>[];
@@ -31,6 +31,10 @@ export interface Props<C extends string = string, K extends string = string> {
   className?: string;
 }
 
+/**
+ * C = List of key for the columns
+ * K = Key of the column to its data as row key
+ */
 export function Table<C extends string = string, K extends string = string>({
   className,
   noHeader,

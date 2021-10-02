@@ -1,5 +1,11 @@
 import { MatchSimulatorUpdater } from '../sim/match-simulator-updater';
-import { MatchActionComment } from './comments';
+import { SimPlayerRef } from '../sim/player';
+import { SimTeamRef } from '../sim/team';
+import {
+  getPlayerCommentData,
+  getTeamCommentData,
+  MatchActionComment,
+} from './comments';
 import {
   CreateMatchActionLogData,
   MatchActionLogDataFieldMap,
@@ -43,5 +49,40 @@ export abstract class MatchActionLogClass<
 
   public abstract run(sim: MatchSimulatorUpdater): void;
 
-  public getComment?(sim: MatchSimulatorUpdater): MatchActionComment<T, D>;
+  public getComment(sim: MatchSimulatorUpdater): MatchActionComment<T, D> {
+    return {
+      type: this.data.type,
+      time: this.meta.time,
+      text: (this.constructor as typeof MatchActionLogClass).comments[
+        this.meta.comment
+      ],
+      params: this.getCommentParams(sim),
+    };
+  }
+
+  protected getCommentParams(
+    sim: MatchSimulatorUpdater
+  ): MatchActionComment<T, D>['params'] {
+    // TODO: Check proper types here :(
+    // tslint:disable:no-any
+    return Object.entries(this.data).reduce((params, [key, value]) => {
+      if (key === 'type') return params;
+
+      if (key === 'duration' || key === 'currentPeriod') {
+        (params as any)[key] = (value as unknown) as number;
+      } else if (key === 'winningTeam') {
+        (params as any)[key] = getTeamCommentData(
+          sim,
+          (value as unknown) as SimTeamRef
+        );
+      } else {
+        (params as any)[key as D] = getPlayerCommentData(
+          sim,
+          (value as unknown) as SimPlayerRef
+        );
+      }
+
+      return params;
+    }, {} as MatchActionComment<T, D>['params']);
+  }
 }

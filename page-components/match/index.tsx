@@ -21,7 +21,7 @@ export const MatchPage: FC<Props> = (props) => {
       description="Azuma League player description"
       externalHeader={header}
     >
-      <MatchDetails actions={state.actions} match={state} />
+      <MatchDetails comments={state.comments} match={state} />
     </Page>
   );
 };

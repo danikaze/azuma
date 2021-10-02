@@ -47,7 +47,8 @@ const actionDef = {
 export function createActionLog<T extends MatchActionLogType>(
   rng: Rng,
   data: MatchActionLogData[T],
-  time: number
+  time: number,
+  commentIndex?: number
 ): MatchActionLogClass<T> {
   const Action = actionDef[data.type];
   if (!Action) {
@@ -57,9 +58,10 @@ export function createActionLog<T extends MatchActionLogType>(
     (Action as typeof MatchActionLogClass).minDuration,
     (Action as typeof MatchActionLogClass).maxDuration
   );
-  const comment = rng.integer(
-    (Action as typeof MatchActionLogClass).comments.length - 1
-  );
+  const comment =
+    commentIndex !== undefined
+      ? commentIndex
+      : rng.integer((Action as typeof MatchActionLogClass).comments.length - 1);
 
   const meta = {
     time,

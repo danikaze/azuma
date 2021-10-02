@@ -39,8 +39,13 @@ export interface MatchActionComment<
   T extends MatchActionLogType,
   P extends keyof MatchActionCommentData = never
 > {
+  /** Type of comment/action */
   type: T;
+  /** Time when the action happened, in seconds from the start of that period */
+  time: number;
+  /** Text of the comment */
   text: string;
+  /** Data to use for the rich rendering */
   params: Pick<MatchActionCommentData, P>;
 }
 

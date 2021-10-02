@@ -1,5 +1,5 @@
 import { Match } from '@model/match/interfaces';
-import { AnyActionComment } from './action-log/comments';
+import { AnyMatchActionComment } from './action-log/comments';
 import {
   MatchActionLogData,
   MatchActionLogMetaData,
@@ -18,7 +18,7 @@ export type SimulateMatchResult = Required<
   Pick<Match, 'homeScore' | 'awayScore' | 'log'>
 > & {
   actions: MatchActionCreationData[];
-  comments: AnyActionComment[];
+  comments: AnyMatchActionComment[];
 };
 
 export function simulateFullMatch(match: Match): Readonly<SimulateMatchResult> {

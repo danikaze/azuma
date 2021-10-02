@@ -2,7 +2,7 @@ import { Match } from '@model/match/interfaces';
 import { MATCH_PERIODS } from '@utils/constants/game';
 import { Rng } from '@utils/rng';
 import { MatchActionCreationData } from '..';
-import { AnyActionComment } from '../action-log/comments';
+import { AnyMatchActionComment } from '../action-log/comments';
 import {
   FieldPosition,
   FieldSection,
@@ -39,7 +39,7 @@ export class MatchSimulatorState {
   /** All actions in a single list */
   protected actions!: MatchActionCreationData[];
   /** All comments in a single list */
-  protected comments!: AnyActionComment[];
+  protected comments!: AnyMatchActionComment[];
 
   constructor(match: Match) {
     this.teams = [

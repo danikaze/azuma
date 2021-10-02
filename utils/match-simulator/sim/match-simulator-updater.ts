@@ -7,7 +7,7 @@ import {
 import { getLogger } from '@utils/logger';
 import { MatchActionCreationData } from '..';
 import { MatchActionLogClass } from '../action-log';
-import { AnyActionComment } from '../action-log/comments';
+import { AnyMatchActionComment } from '../action-log/comments';
 import { createActionLog } from '../action-log/factory';
 import {
   MatchActionLogData,
@@ -78,7 +78,12 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     this.reset();
     MatchSimulatorUpdater.getActions(log, ellapsedMs).forEach((actionData) =>
       this.update(
-        createActionLog(this.rng, actionData.data, actionData.meta.time)
+        createActionLog(
+          this.rng,
+          actionData.data,
+          actionData.meta.time,
+          actionData.meta.comment
+        )
       )
     );
   }
@@ -103,7 +108,7 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     action.run(this);
 
     if (action.getComment) {
-      const commentData = action.getComment(this) as AnyActionComment;
+      const commentData = action.getComment(this) as AnyMatchActionComment;
       this.comments.push(commentData);
     }
   }

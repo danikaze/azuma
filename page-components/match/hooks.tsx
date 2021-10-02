@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react';
 import { Match } from '@model/match/interfaces';
 import { getMilliseconds } from '@utils/jikan';
-import {
-  MatchActionCreationData,
-  simulateOngoingMatch,
-} from '@utils/match-simulator';
+import { simulateOngoingMatch } from '@utils/match-simulator';
+import { AnyMatchActionComment } from '@utils/match-simulator/action-log/comments';
+import { useEffect, useState } from 'react';
 import { Props } from '.';
 
 type State = Match & {
-  actions?: MatchActionCreationData[];
+  comments?: AnyMatchActionComment[];
 };
 
 export function useMatch({ match }: Props) {
@@ -36,7 +34,7 @@ export function useMatch({ match }: Props) {
 
 function getCurrentState(
   match: Match
-): {} | Pick<State, 'actions' | 'homeScore' | 'awayScore'> {
+): {} | Pick<State, 'homeScore' | 'awayScore'> {
   if (match.state === 'pending' || match.state === 'cancelled') {
     return {};
   }

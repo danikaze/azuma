@@ -1,3 +1,3 @@
 export const comments = [
-  'What a bad luck. Looks like {{player.fullName}} got unfortunately injured.',
+  'What a bad luck. Looks like {{injuriedPlayer.fullName}} got unfortunately injured.',
 ];

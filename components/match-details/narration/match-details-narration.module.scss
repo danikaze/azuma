@@ -6,9 +6,48 @@
   }
 }
 
+.filter {
+  margin-bottom: 10px;
+  label,
+  input {
+    cursor: pointer;
+  }
+}
+
 .timeCol {
   width: 100px;
 }
+
+.iconCol {
+  width: 25px;
+
+  .icon {
+    width: 15px;
+    height: 15px;
+  }
+
+  .substitution {
+    &::after {
+      content: '🔄';
+    }
+  }
+  .injury {
+    &::after {
+      content: '🚑';
+    }
+  }
+  .goal {
+    &::after {
+      content: '🥅';
+    }
+  }
+  .time {
+    &::after {
+      content: '⌛';
+    }
+  }
+}
+
 .commentCol {
   text-align: left !important;
 }

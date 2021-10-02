@@ -5,10 +5,17 @@ import { MatchEnd } from '../match-end';
 import { comments } from './comments';
 
 type ActionLogType = 'PeriodEnd';
+type ActionLogData = 'currentPeriod';
 
-export type PeriodEndData = CreateMatchActionLogData<ActionLogType>;
+export type PeriodEndData = CreateMatchActionLogData<
+  ActionLogType,
+  ActionLogData
+>;
 
-export class PeriodEnd extends MatchActionLogClass<ActionLogType> {
+export class PeriodEnd extends MatchActionLogClass<
+  ActionLogType,
+  ActionLogData
+> {
   public static readonly minDuration = MatchEnd.minDuration;
   public static readonly maxDuration = MatchEnd.maxDuration;
   public static comments = comments;

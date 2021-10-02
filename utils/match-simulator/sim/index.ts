@@ -22,10 +22,18 @@ export class MatchSimulator extends MatchSimulatorUpdater {
 
     for (let period = 0; period < MATCH_PERIODS; period++) {
       // period start
-      this.do({
-        type: period === 0 ? 'MatchStart' : 'PeriodStart',
-        player: this.getRandomPlayer()!.getRef(),
-      } as MatchActionLogData['MatchStart' | 'PeriodStart']);
+      if (period === 0) {
+        this.do({
+          type: 'MatchStart',
+          player: this.getRandomPlayer()!.getRef(),
+        } as MatchActionLogData['MatchStart']);
+      } else {
+        this.do({
+          type: 'PeriodStart',
+          player: this.getRandomPlayer()!.getRef(),
+          currentPeriod: period,
+        } as MatchActionLogData['PeriodStart']);
+      }
 
       // period actions
       while (this.time < matchPeriodSecs) {
@@ -41,9 +49,16 @@ export class MatchSimulator extends MatchSimulatorUpdater {
       }
 
       // period end
-      this.do({
-        type: period === MATCH_PERIODS - 1 ? 'MatchEnd' : 'PeriodEnd',
-      });
+      if (period === MATCH_PERIODS - 1) {
+        this.do({
+          type: 'MatchEnd',
+        });
+      } else {
+        this.do({
+          type: 'PeriodEnd',
+          currentPeriod: period,
+        });
+      }
     }
 
     if (!this.isScoreTied()) return;

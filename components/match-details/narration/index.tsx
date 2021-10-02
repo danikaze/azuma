@@ -1,17 +1,27 @@
+import clsx from 'clsx';
 import React, { FC, ReactNode } from 'react';
 import { Table, TableColumn, TableRow } from '@components/table';
 import { AnyMatchActionComment } from '@utils/match-simulator/action-log/comments';
-import styles from './match-details-narration.module.scss';
 import { MatchDetailsRichData } from '../rich-data';
+import { useMatchDetailsNarration } from './hooks';
+import { actionTypeToIconMap } from './constants';
+
+import styles from './match-details-narration.module.scss';
 
 export type Props = {
   comments: AnyMatchActionComment[];
 };
 
-const columns: TableColumn<'time' | 'comment'>[] = [
+type ColumKeys = 'time' | 'icon' | 'comment';
+
+const columns: TableColumn<ColumKeys>[] = [
   {
     key: 'time',
     className: styles.timeCol,
+  },
+  {
+    key: 'icon',
+    className: styles.iconCol,
   },
   {
     key: 'comment',
@@ -19,13 +29,22 @@ const columns: TableColumn<'time' | 'comment'>[] = [
   },
 ];
 
-export const MatchDetailsNarration: FC<Props> = ({ comments }) => {
+export const MatchDetailsNarration: FC<Props> = (props) => {
+  const { comments, refs, updateFilter } = useMatchDetailsNarration(props);
   if (!comments) return null;
 
   // TODO: Replace the Table by a Grid
   return (
     <div className={styles.root}>
       <h2>Play by Play</h2>
+
+      <div className={styles.filter}>
+        <label>
+          <input type="checkbox" ref={refs.checkbox} onChange={updateFilter} />{' '}
+          Filter only important events
+        </label>
+      </div>
+
       <Table noHeader reverseRows columns={columns} rows={getRows(comments)} />
     </div>
   );
@@ -33,9 +52,10 @@ export const MatchDetailsNarration: FC<Props> = ({ comments }) => {
 
 function getRows(
   comments: AnyMatchActionComment[]
-): TableRow<'time' | 'comment', never>[] {
+): TableRow<ColumKeys, never>[] {
   return comments.map((comment) => ({
     time: formatTime(comment.time),
+    icon: formatIcon(comment.type),
     comment: formatText(comment),
   }));
 }
@@ -46,6 +66,12 @@ function formatTime(time: number): string {
   const secs = String(Math.floor(time % 60)).padStart(2, '0');
 
   return `${min}' ${secs}''`;
+}
+
+function formatIcon(type: AnyMatchActionComment['type']): ReactNode | null {
+  const iconClass = actionTypeToIconMap[type];
+  if (!iconClass) return null;
+  return <div className={clsx(styles.icon, iconClass)} />;
 }
 
 function formatText(comment: AnyMatchActionComment): ReactNode[] {

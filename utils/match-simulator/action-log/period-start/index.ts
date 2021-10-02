@@ -5,7 +5,7 @@ import { MatchStart } from '../match-start';
 import { comments } from './comments';
 
 type ActionLogType = 'PeriodStart';
-type ActionLogData = 'player';
+type ActionLogData = 'player' | 'currentPeriod';
 
 export type PeriodStartData = CreateMatchActionLogData<
   ActionLogType,

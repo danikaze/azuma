@@ -3,7 +3,7 @@ import { MatchActionLogClass } from '..';
 import { CreateMatchActionLogData } from '../interfaces';
 import { comments } from './comments';
 
-type ActionLogType = 'Injury';
+type ActionLogType = 'MatchStart';
 type ActionLogData = 'player';
 
 export type MatchStartData = CreateMatchActionLogData<

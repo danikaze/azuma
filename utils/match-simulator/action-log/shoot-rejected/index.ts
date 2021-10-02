@@ -1,16 +1,23 @@
 import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
-import { SimPlayerRef } from '@utils/match-simulator/sim/player';
-import { MatchActionLog, MatchActionLogBaseData } from '..';
+import { MatchActionLogClass } from '..';
+import { CreateMatchActionLogData } from '../interfaces';
+import { comments } from './comments';
 
-export interface ShootRejectedData
-  extends MatchActionLogBaseData<'ShootRejected'> {
-  shooter: SimPlayerRef;
-  keeper: SimPlayerRef;
-}
+type ActionLogType = 'ShootRejected';
+type ActionLogData = 'shooter' | 'keeper';
 
-export class ShootRejected extends MatchActionLog<'ShootRejected'> {
+export type ShootRejectedData = CreateMatchActionLogData<
+  ActionLogType,
+  ActionLogData
+>;
+
+export class ShootRejected extends MatchActionLogClass<
+  ActionLogType,
+  ActionLogData
+> {
   public static readonly minDuration = 2;
   public static readonly maxDuration = 7;
+  public static comments = comments;
 
   public run(sim: MatchSimulatorUpdater): void {
     sim.setPossession(undefined);

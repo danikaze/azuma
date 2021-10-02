@@ -20,6 +20,8 @@ export interface SimTeamGetRandomPlayerOptions {
 
 export class SimTeam {
   public readonly index: SimTeamRef;
+  public readonly teamId: Team['teamId'];
+  public readonly name: Team['name'];
   public readonly formation: Formation;
 
   protected readonly roster: SimPlayer[];
@@ -28,6 +30,8 @@ export class SimTeam {
 
   constructor(team: Team, index: SimTeamRef) {
     this.index = index;
+    this.teamId = team.teamId;
+    this.name = team.name;
     this.formation = { ...team.formation };
     this.roster = team.players.map(
       (player, i) => new SimPlayer(this, player, i)

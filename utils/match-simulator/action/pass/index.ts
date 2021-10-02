@@ -1,6 +1,10 @@
+import {
+  AnyMatchActionLogData,
+  MatchActionLogData,
+} from '@utils/match-simulator/action-log/interfaces';
 import { MatchSimulatorQuerier } from '@utils/match-simulator/sim/match-simulator-querier';
 import { Rng } from '@utils/rng';
-import { ActionLogDataWithoutTime, MatchAction } from '..';
+import { MatchAction } from '..';
 
 export class Pass extends MatchAction {
   public static getChances(sim: MatchSimulatorQuerier): number {
@@ -8,7 +12,7 @@ export class Pass extends MatchAction {
     return MatchAction.DEFAULT_ACTION_CHANCES;
   }
 
-  public run(sim: MatchSimulatorQuerier, rng: Rng): ActionLogDataWithoutTime[] {
+  public run(sim: MatchSimulatorQuerier, rng: Rng): AnyMatchActionLogData[] {
     const currentPlayer = sim.getPossessionPlayer()!;
     const toPlayer = sim.getRandomPlayer({
       team: sim.getAttackingTeam(),
@@ -29,13 +33,13 @@ export class Pass extends MatchAction {
           type: 'Pass',
           from: currentPlayer.getRef(),
           to: toPlayer.getRef(),
-        } as ActionLogDataWithoutTime<'Pass'>)
+        } as MatchActionLogData['Pass'])
       : ({
           type: 'PassCut',
           from: currentPlayer.getRef(),
           to: toPlayer.getRef(),
           cutBy: cutBy!.getRef(),
-        } as ActionLogDataWithoutTime<'PassCut'>);
+        } as MatchActionLogData['PassCut']);
 
     return [action];
   }

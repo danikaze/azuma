@@ -1,12 +1,25 @@
 import { Match } from '@model/match/interfaces';
-import { MatchActionLogDataMap, MatchActionLogType } from './action-log';
+import { AnyActionComment } from './action-log/comments';
+import {
+  MatchActionLogData,
+  MatchActionLogMetaData,
+  MatchActionLogType,
+} from './action-log/interfaces';
 import { MatchSimulator } from './sim';
 
-export type MatchActionData = MatchActionLogDataMap[MatchActionLogType];
+export interface MatchActionCreationData<
+  T extends MatchActionLogType = MatchActionLogType
+> {
+  data: MatchActionLogData[T];
+  meta: MatchActionLogMetaData;
+}
 
 export type SimulateMatchResult = Required<
   Pick<Match, 'homeScore' | 'awayScore' | 'log'>
-> & { actions: MatchActionData[] };
+> & {
+  actions: MatchActionCreationData[];
+  comments: AnyActionComment[];
+};
 
 export function simulateFullMatch(match: Match): Readonly<SimulateMatchResult> {
   const simulator = new MatchSimulator(match);

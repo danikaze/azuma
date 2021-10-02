@@ -19,7 +19,16 @@ export class MatchSimulatorQuerier extends MatchSimulatorState {
       awayScore: this.score[SIM_TEAM_REF_I_AWAY],
       log: this.log,
       actions: this.actions,
+      comments: this.comments,
     };
+  }
+
+  public getHomeTeam(): SimTeam {
+    return this.teams[SIM_TEAM_REF_I_HOME];
+  }
+
+  public getAwayTeam(): SimTeam {
+    return this.teams[SIM_TEAM_REF_I_AWAY];
   }
 
   public getPossessionPlayer(): SimPlayer | undefined {
@@ -69,12 +78,18 @@ export class MatchSimulatorQuerier extends MatchSimulatorState {
     return team.getRandomPlayer(this.rng, options);
   }
 
-  protected getTeam(team: SimTeam | SimTeamRef): SimTeam {
+  public getTeam(team: SimTeam | SimTeamRef): SimTeam {
     if (team instanceof SimTeam) return team;
     return this.teams[team];
   }
 
-  protected getPlayer(
+  public getPlayer(player: SimPlayer | SimPlayerRef): SimPlayer;
+
+  public getPlayer(
+    player: SimPlayer | SimPlayerRef | undefined
+  ): SimPlayer | undefined;
+
+  public getPlayer(
     player: SimPlayer | SimPlayerRef | undefined
   ): SimPlayer | undefined {
     if (!player || player instanceof SimPlayer) return player;

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Match } from '@model/match/interfaces';
 import { SHOW_MATCH_PREVIEW_FROM } from '@utils/constants/ui';
 import { getMilliseconds } from '@utils/jikan';
-import { MatchActionData } from '@utils/match-simulator';
+import { MatchActionCreationData } from '@utils/match-simulator';
 import { MatchDetailsNarration } from './narration';
 import { MatchDetailsStartingSoon } from './starting-soon';
 
@@ -10,7 +10,7 @@ import styles from './match-details.module.scss';
 
 export type Props = {
   match: Match;
-  actions?: MatchActionData[];
+  actions?: MatchActionCreationData[];
 };
 
 export const MatchDetails: FC<Props> = ({ match, actions }) => {

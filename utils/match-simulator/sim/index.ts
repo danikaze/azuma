@@ -1,6 +1,6 @@
 import { Match } from '@model/match/interfaces';
 import { MATCH_PERIODS, MATCH_PERIOD_MS } from '@utils/constants/game';
-import { ActionLogDataWithoutTime } from '../action';
+import { MatchActionLogData } from '../action-log/interfaces';
 import { createAction, getActionChances } from '../action/factory';
 import { MatchSimulatorStateOptions } from './match-simulator-state';
 import { MatchSimulatorUpdater } from './match-simulator-updater';
@@ -24,8 +24,8 @@ export class MatchSimulator extends MatchSimulatorUpdater {
       // period start
       this.do({
         type: period === 0 ? 'MatchStart' : 'PeriodStart',
-        playerRef: this.getRandomPlayer()!.getRef(),
-      } as ActionLogDataWithoutTime<'MatchStart' | 'PeriodStart'>);
+        player: this.getRandomPlayer()!.getRef(),
+      } as MatchActionLogData['MatchStart' | 'PeriodStart']);
 
       // period actions
       while (this.time < matchPeriodSecs) {
@@ -50,7 +50,7 @@ export class MatchSimulator extends MatchSimulatorUpdater {
 
     this.do({
       type: 'TieBreak',
-      teamRef: this.getRandomTeam().getRef(),
-    } as ActionLogDataWithoutTime<'TieBreak'>);
+      winningTeam: this.getRandomTeam().getRef(),
+    } as MatchActionLogData['TieBreak']);
   }
 }

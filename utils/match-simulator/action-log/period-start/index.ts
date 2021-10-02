@@ -1,15 +1,24 @@
 import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
-import { SimPlayerRef } from '@utils/match-simulator/sim/player';
-import { MatchActionLog, MatchActionLogBaseData } from '..';
+import { MatchActionLogClass } from '..';
+import { CreateMatchActionLogData } from '../interfaces';
 import { MatchStart } from '../match-start';
+import { comments } from './comments';
 
-export interface PeriodStartData extends MatchActionLogBaseData<'PeriodStart'> {
-  playerRef: SimPlayerRef;
-}
+type ActionLogType = 'PeriodStart';
+type ActionLogData = 'player';
 
-export class PeriodStart extends MatchActionLog<'PeriodStart'> {
+export type PeriodStartData = CreateMatchActionLogData<
+  ActionLogType,
+  ActionLogData
+>;
+
+export class PeriodStart extends MatchActionLogClass<
+  ActionLogType,
+  ActionLogData
+> {
   public static readonly minDuration = MatchStart.minDuration;
   public static readonly maxDuration = MatchStart.maxDuration;
+  public static comments = comments;
 
   public run(sim: MatchSimulatorUpdater): void {
     sim.startPeriod(this.data);

@@ -1,10 +1,11 @@
 import { Rng } from '@utils/rng';
-import { MatchActionLog, MatchActionLogDataMap, MatchActionLogType } from '.';
+import { MatchActionLogClass } from '.';
 import { Dribble } from './dribble';
 import { DribbleCut } from './dribble-cut';
 import { FaulWithInjury } from './faul-with-injury';
 import { FaulWithoutInjury } from './faul-without-injury';
 import { Injury } from './injury';
+import { MatchActionLogData, MatchActionLogType } from './interfaces';
 import { MatchEnd } from './match-end';
 import { MatchStart } from './match-start';
 import { Pass } from './pass';
@@ -40,26 +41,32 @@ const actionDef = {
   TieBreak,
 } as const;
 
-export type ActionLogCreator = <T extends MatchActionLogType>(
-  data: MatchActionLogDataMap[T]
-) => MatchActionLog<T>;
-
 /**
  * Creates a MatchActionLog based on the data type
  */
 export function createActionLog<T extends MatchActionLogType>(
   rng: Rng,
-  data: MatchActionLogDataMap[T]
-): MatchActionLog<T> {
+  data: MatchActionLogData[T],
+  time: number
+): MatchActionLogClass<T> {
   const Action = actionDef[data.type];
   if (!Action) {
     throw new Error(`Action type "${data.type}" is not defined`);
   }
   const duration = rng.integer(
-    (Action as typeof MatchActionLog).minDuration,
-    (Action as typeof MatchActionLog).maxDuration
+    (Action as typeof MatchActionLogClass).minDuration,
+    (Action as typeof MatchActionLogClass).maxDuration
+  );
+  const comment = rng.integer(
+    (Action as typeof MatchActionLogClass).comments.length - 1
   );
 
+  const meta = {
+    time,
+    duration,
+    comment,
+  };
+
   // tslint:disable-next-line:no-any
-  return new Action(data as any, duration) as MatchActionLog<T>;
+  return new Action(data as any, meta) as MatchActionLogClass<T>;
 }

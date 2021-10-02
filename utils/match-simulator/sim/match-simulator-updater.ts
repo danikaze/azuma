@@ -5,19 +5,14 @@ import {
   MATCH_PERIOD_MS,
 } from '@utils/constants/game';
 import { getLogger } from '@utils/logger';
-import { MatchActionData } from '..';
-import { ActionLogDataWithoutTime } from '../action';
-import {
-  MatchActionLog,
-  MatchActionLogDataMap,
-  MatchActionLogType,
-} from '../action-log';
+import { MatchActionCreationData } from '..';
+import { MatchActionLogClass } from '../action-log';
+import { AnyActionComment } from '../action-log/comments';
 import { createActionLog } from '../action-log/factory';
-import { MatchEndData } from '../action-log/match-end';
-import { MatchStartData } from '../action-log/match-start';
-import { PeriodEndData } from '../action-log/period-end';
-import { PeriodStartData } from '../action-log/period-start';
-import { TieBreakData } from '../action-log/tie-break';
+import {
+  MatchActionLogData,
+  MatchActionLogType,
+} from '../action-log/interfaces';
 import {
   FieldSection,
   FieldSectionSide,
@@ -41,10 +36,10 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
   }
 
   private static getActions(
-    log: MatchActionData[][],
+    log: MatchActionCreationData[][],
     ellapsedMs?: number
-  ): MatchActionData[] {
-    const actions: MatchActionData[] = [];
+  ): MatchActionCreationData[] {
+    const actions: MatchActionCreationData[] = [];
     const fullPeriodAndBreak = (MATCH_PERIOD_MS + MATCH_BREAK_MS) / 1000;
     let playedTime = ellapsedMs ? ellapsedMs / 1000 : undefined;
 
@@ -69,7 +64,7 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
 
       // period being currently played
       for (const action of period) {
-        if (playedTime < action.time) break;
+        if (playedTime < action.meta.time) break;
         actions.push(action);
       }
       playedTime -= fullPeriodAndBreak;
@@ -82,11 +77,13 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     const log = this.log;
     this.reset();
     MatchSimulatorUpdater.getActions(log, ellapsedMs).forEach((actionData) =>
-      this.update(createActionLog(this.rng, actionData))
+      this.update(
+        createActionLog(this.rng, actionData.data, actionData.meta.time)
+      )
     );
   }
 
-  public update(action: MatchActionLog<MatchActionLogType>): void {
+  public update(action: MatchActionLogClass<MatchActionLogType>): void {
     if (!IS_PRODUCTION) {
       Object.entries(action.data).forEach(([key, value]) => {
         if (JSON.stringify(value) === undefined) {
@@ -97,29 +94,38 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
       });
     }
 
-    this.log[this.period].push(action.data);
-    this.actions.push(action.data);
+    const creationData = {
+      data: action.data,
+      meta: action.meta,
+    } as MatchActionCreationData;
+    this.log[this.period].push(creationData);
+    this.actions.push(creationData);
     action.run(this);
+
+    if (action.getComment) {
+      const commentData = action.getComment(this) as AnyActionComment;
+      this.comments.push(commentData);
+    }
   }
 
-  public startMatch(action: MatchStartData): void {
-    this.possession = this.getPlayer(action.playerRef);
+  public startMatch(action: MatchActionLogData['MatchStart']): void {
+    this.possession = this.getPlayer(action.player);
     this.ballPosition[FIELD_SECTION_I] = FieldSection.CENTER;
     this.ballPosition[FIELD_SECTION_SIDE_I] = FieldSectionSide.CENTER;
   }
 
-  public startPeriod(action: PeriodStartData): void {
-    this.possession = this.getPlayer(action.playerRef);
+  public startPeriod(action: MatchActionLogData['PeriodStart']): void {
+    this.possession = this.getPlayer(action.player);
     this.ballPosition[FIELD_SECTION_I] = FieldSection.CENTER;
     this.ballPosition[FIELD_SECTION_SIDE_I] = FieldSectionSide.CENTER;
   }
 
-  public endPeriod(action: PeriodEndData): void {
+  public endPeriod(action: MatchActionLogData['PeriodEnd']): void {
     this.period++;
     this.time = 0;
   }
 
-  public endMatch(action: MatchEndData): void {}
+  public endMatch(action: MatchActionLogData['MatchEnd']): void {}
 
   public setPossession(player: SimPlayer | SimPlayerRef | undefined): void {
     const MAX_SECTOR_INDEX = 4;
@@ -141,15 +147,12 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
     this.ballPosition[FIELD_SECTION_SIDE_I] = FieldSectionSide.CENTER;
   }
 
-  public untie(action: TieBreakData) {
-    this.addScore(action.teamRef, GOAL_SCORE / 2);
+  public untie(action: MatchActionLogData['TieBreak']) {
+    this.addScore(action.winningTeam, GOAL_SCORE / 2);
   }
 
-  public injury(
-    player: SimPlayer | SimPlayerRef | undefined,
-    time: number
-  ): void {
-    this.getPlayer(player)!.setState('injury', time);
+  public injury(player: SimPlayer | SimPlayerRef, time: number): void {
+    this.getPlayer(player).setState('injury', time);
   }
 
   public substitute(
@@ -170,14 +173,11 @@ export class MatchSimulatorUpdater extends MatchSimulatorQuerier {
   }
 
   protected do<T extends MatchActionLogType>(
-    data: ActionLogDataWithoutTime<T>
+    data: MatchActionLogData[T]
   ): void {
-    const action = createActionLog(this.rng, {
-      ...data,
-      time: this.time,
-    } as MatchActionLogDataMap[T]);
+    const action = createActionLog(this.rng, data, this.time);
     this.update(action);
-    this.time += action.duration;
+    this.time += action.meta.duration;
   }
 
   protected addScore(team: SimTeamRef, value: number): void {

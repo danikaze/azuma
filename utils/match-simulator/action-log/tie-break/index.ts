@@ -1,14 +1,23 @@
 import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
-import { SimTeamRef } from '@utils/match-simulator/sim/team';
-import { MatchActionLog, MatchActionLogBaseData } from '..';
+import { MatchActionLogClass } from '..';
+import { CreateMatchActionLogData } from '../interfaces';
+import { comments } from './comments';
 
-export interface TieBreakData extends MatchActionLogBaseData<'TieBreak'> {
-  teamRef: SimTeamRef;
-}
+type ActionLogType = 'TieBreak';
+type ActionLogData = 'winningTeam';
 
-export class TieBreak extends MatchActionLog<'TieBreak'> {
+export type TieBreakData = CreateMatchActionLogData<
+  ActionLogType,
+  ActionLogData
+>;
+
+export class TieBreak extends MatchActionLogClass<
+  ActionLogType,
+  ActionLogData
+> {
   public static readonly minDuration = 300;
   public static readonly maxDuration = 300;
+  public static comments = comments;
 
   public run(sim: MatchSimulatorUpdater): void {
     sim.untie(this.data);

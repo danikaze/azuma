@@ -1,11 +1,7 @@
 import { AlteredState } from '@model/player/interfaces';
 import { Rng } from '@utils/rng';
-import { MatchActionLogDataMap, MatchActionLogType } from '../action-log';
+import { AnyMatchActionLogData } from '../action-log/interfaces';
 import { MatchSimulatorQuerier } from '../sim/match-simulator-querier';
-
-export type ActionLogDataWithoutTime<
-  T extends MatchActionLogType = MatchActionLogType
-> = Omit<MatchActionLogDataMap[T], 'time'>;
 
 export abstract class MatchAction {
   protected static readonly DEFAULT_ACTION_CHANCES = 100;
@@ -48,7 +44,7 @@ export abstract class MatchAction {
   };
 
   /**
-   * By default all actions have a chance of "100" to get picked but overriding
+   * By default all actions have a chance of `100` to get picked but overriding
    * this method gives the opportunity to customize it depending on the state
    * of the match.
    * i.e. players shouldn't score a goal if they are in their field, so it
@@ -61,5 +57,5 @@ export abstract class MatchAction {
   public abstract run(
     sim: MatchSimulatorQuerier,
     rng: Rng
-  ): ActionLogDataWithoutTime[];
+  ): AnyMatchActionLogData[];
 }

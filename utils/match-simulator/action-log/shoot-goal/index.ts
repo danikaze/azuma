@@ -1,15 +1,23 @@
 import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
-import { SimPlayerRef } from '@utils/match-simulator/sim/player';
-import { MatchActionLog, MatchActionLogBaseData } from '..';
+import { MatchActionLogClass } from '..';
+import { CreateMatchActionLogData } from '../interfaces';
+import { comments } from './comments';
 
-export interface ShootGoalData extends MatchActionLogBaseData<'ShootGoal'> {
-  shooter: SimPlayerRef;
-  keeper: SimPlayerRef;
-}
+type ActionLogType = 'ShootGoal';
+type ActionLogData = 'shooter' | 'keeper';
 
-export class ShootGoal extends MatchActionLog<'ShootGoal'> {
+export type ShootGoalData = CreateMatchActionLogData<
+  ActionLogType,
+  ActionLogData
+>;
+
+export class ShootGoal extends MatchActionLogClass<
+  'ShootGoal',
+  'shooter' | 'keeper'
+> {
   public static readonly minDuration = 15;
   public static readonly maxDuration = 30;
+  public static comments = comments;
 
   public run(sim: MatchSimulatorUpdater): void {
     sim.goal();

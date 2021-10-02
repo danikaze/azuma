@@ -1,5 +1,6 @@
 import {
   AlteredState,
+  Player,
   PlayerAlteredState,
   PlayerPosition,
   PlayerSkill,
@@ -14,6 +15,11 @@ export type SimPlayerRef = readonly [SimTeamRef, number];
 
 export class SimPlayer {
   public readonly team: SimTeam;
+  public readonly playerId: Player['playerId'];
+  public readonly genre: Player['genre'];
+  public readonly name: Player['name'];
+  public readonly surname: Player['surname'];
+  public readonly number: PlayerInTeam['number'];
   /** Where it's in the field */
   public readonly fieldPosition: FieldPosition | undefined;
 
@@ -32,6 +38,11 @@ export class SimPlayer {
 
   constructor(team: SimTeam, teamPlayer: PlayerInTeam, index: number) {
     this.team = team;
+    this.playerId = teamPlayer.player.playerId;
+    this.genre = teamPlayer.player.genre;
+    this.name = teamPlayer.player.name;
+    this.surname = teamPlayer.player.surname;
+    this.number = teamPlayer.number;
     this.preferredPosition = teamPlayer.player.position;
     this.position = team.formation.positions[index];
     this.ref = [this.team.getRef(), index];

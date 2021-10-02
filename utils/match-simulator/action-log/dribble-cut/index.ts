@@ -1,17 +1,25 @@
 import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
-import { SimPlayerRef } from '@utils/match-simulator/sim/player';
-import { MatchActionLog, MatchActionLogBaseData } from '..';
+import { MatchActionLogClass } from '..';
+import { CreateMatchActionLogData } from '../interfaces';
+import { comments } from './comments';
 
-export interface DribbleCutData extends MatchActionLogBaseData<'DribbleCut'> {
-  attack: SimPlayerRef;
-  defense: SimPlayerRef;
-}
+type ActionLogType = 'DribbleCut';
+type ActionLogData = 'attacker' | 'defender';
 
-export class DribbleCut extends MatchActionLog<'DribbleCut'> {
+export type DribbleCutData = CreateMatchActionLogData<
+  ActionLogType,
+  ActionLogData
+>;
+
+export class DribbleCut extends MatchActionLogClass<
+  ActionLogType,
+  ActionLogData
+> {
   public static readonly minDuration = 5;
   public static readonly maxDuration = 15;
+  public static comments = comments;
 
   public run(sim: MatchSimulatorUpdater): void {
-    sim.setPossession(this.data.defense);
+    sim.setPossession(this.data.defender);
   }
 }

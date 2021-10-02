@@ -1,13 +1,17 @@
 import {
+  AnyMatchActionLogData,
+  MatchActionLogData,
+} from '@utils/match-simulator/action-log/interfaces';
+import {
   FieldSection,
-  SIM_TEAM_REF_I_HOME,
-  SIM_TEAM_REF_I_AWAY,
   FIELD_SECTION_I,
+  SIM_TEAM_REF_I_AWAY,
+  SIM_TEAM_REF_I_HOME,
 } from '@utils/match-simulator/sim/constants';
 import { MatchSimulatorQuerier } from '@utils/match-simulator/sim/match-simulator-querier';
 import { SimTeamRef } from '@utils/match-simulator/sim/team';
 import { Rng } from '@utils/rng';
-import { ActionLogDataWithoutTime, MatchAction } from '..';
+import { MatchAction } from '..';
 
 export class Shoot extends MatchAction {
   protected static readonly CHANCES: Record<
@@ -36,7 +40,7 @@ export class Shoot extends MatchAction {
     return Shoot.CHANCES[attackerIndex][sim.getBallPosition()[FIELD_SECTION_I]];
   }
 
-  public run(sim: MatchSimulatorQuerier, rng: Rng): ActionLogDataWithoutTime[] {
+  public run(sim: MatchSimulatorQuerier, rng: Rng): AnyMatchActionLogData[] {
     const shooter = sim.getPossessionPlayer()!;
     const keeper = sim.getRandomPlayer({
       team: sim.getDefendingTeam(),
@@ -65,7 +69,7 @@ export class Shoot extends MatchAction {
           type: 'ShootMiss',
           shooter: shooter.getRef(),
           keeper: keeper.getRef(),
-        } as ActionLogDataWithoutTime<'ShootMiss'>,
+        } as MatchActionLogData['ShootMiss'],
       ];
     }
 
@@ -78,7 +82,7 @@ export class Shoot extends MatchAction {
           type: 'ShootGoal',
           shooter: shooter.getRef(),
           keeper: keeper.getRef(),
-        } as ActionLogDataWithoutTime<'ShootGoal'>,
+        } as MatchActionLogData['ShootGoal'],
       ];
     }
 
@@ -88,7 +92,7 @@ export class Shoot extends MatchAction {
           type: 'ShootBlocked',
           shooter: shooter.getRef(),
           keeper: keeper.getRef(),
-        } as ActionLogDataWithoutTime<'ShootBlocked'>,
+        } as MatchActionLogData['ShootBlocked'],
       ];
     }
 
@@ -97,7 +101,7 @@ export class Shoot extends MatchAction {
         type: 'ShootRejected',
         shooter: shooter.getRef(),
         keeper: keeper.getRef(),
-      } as ActionLogDataWithoutTime<'ShootRejected'>,
+      } as MatchActionLogData['ShootRejected'],
     ];
   }
 }

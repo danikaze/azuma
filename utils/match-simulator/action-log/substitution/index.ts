@@ -1,18 +1,25 @@
 import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
-import { SimPlayerRef } from '@utils/match-simulator/sim/player';
-import { MatchActionLog, MatchActionLogBaseData } from '..';
+import { MatchActionLogClass } from '..';
+import { CreateMatchActionLogData } from '../interfaces';
+import { comments } from './comments';
 
-export interface SubstitutionData
-  extends MatchActionLogBaseData<'Substitution'> {
-  in: SimPlayerRef;
-  out: SimPlayerRef;
-}
+type ActionLogType = 'Substitution';
+type ActionLogData = 'playerIn' | 'playerOut';
 
-export class Substitution extends MatchActionLog<'Substitution'> {
+export type SubstitutionData = CreateMatchActionLogData<
+  ActionLogType,
+  ActionLogData
+>;
+
+export class Substitution extends MatchActionLogClass<
+  ActionLogType,
+  ActionLogData
+> {
   public static readonly minDuration = 30;
   public static readonly maxDuration = 60;
+  public static comments = comments;
 
   public run(sim: MatchSimulatorUpdater): void {
-    sim.substitute(this.data.out, this.data.in);
+    sim.substitute(this.data.playerOut, this.data.playerIn);
   }
 }

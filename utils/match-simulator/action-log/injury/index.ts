@@ -1,18 +1,19 @@
 import { MatchSimulatorUpdater } from '@utils/match-simulator/sim/match-simulator-updater';
-import { SimPlayerRef } from '@utils/match-simulator/sim/player';
-import { MatchActionLog, MatchActionLogBaseData } from '..';
+import { MatchActionLogClass } from '..';
+import { CreateMatchActionLogData } from '../interfaces';
+import { comments } from './comments';
 
-export interface InjuryData extends MatchActionLogBaseData<'Injury'> {
-  player: SimPlayerRef;
-  duration: number;
-  from?: SimPlayerRef;
-}
+type ActionLogType = 'Injury';
+type ActionLogData = 'from' | 'injuriedPlayer' | 'duration';
 
-export class Injury extends MatchActionLog<'Injury'> {
+export type InjuryData = CreateMatchActionLogData<ActionLogType, ActionLogData>;
+
+export class Injury extends MatchActionLogClass<ActionLogType, ActionLogData> {
   public static readonly minDuration = 60;
   public static readonly maxDuration = 120;
+  public static comments = comments;
 
   public run(sim: MatchSimulatorUpdater): void {
-    sim.injury(this.data.player, this.data.duration);
+    sim.injury(this.data.injuriedPlayer, this.data.duration);
   }
 }

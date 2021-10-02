@@ -1,8 +1,14 @@
+import { DribbleCut } from '@utils/match-simulator/action-log/dribble-cut';
+import {
+  AnyMatchActionLogData,
+  CreateMatchActionLogData,
+  MatchActionLogData,
+} from '@utils/match-simulator/action-log/interfaces';
 import { MatchSimulatorQuerier } from '@utils/match-simulator/sim/match-simulator-querier';
 import { SimPlayerRef } from '@utils/match-simulator/sim/player';
 import { SimTeam } from '@utils/match-simulator/sim/team';
 import { Rng } from '@utils/rng';
-import { ActionLogDataWithoutTime, MatchAction } from '..';
+import { MatchAction } from '..';
 
 export class Dribble extends MatchAction {
   public static getChances(sim: MatchSimulatorQuerier): number {
@@ -21,8 +27,8 @@ export class Dribble extends MatchAction {
     return player?.getRef();
   }
 
-  public run(sim: MatchSimulatorQuerier, rng: Rng): ActionLogDataWithoutTime[] {
-    const actions: ActionLogDataWithoutTime[] = [];
+  public run(sim: MatchSimulatorQuerier, rng: Rng): AnyMatchActionLogData[] {
+    const actions: AnyMatchActionLogData[] = [];
     const attackingPlayer = sim.getPossessionPlayer()!;
     const defensePlayer = sim.getRandomPlayer({
       team: sim.getDefendingTeam(),
@@ -36,9 +42,9 @@ export class Dribble extends MatchAction {
 
     const dribbleResult = {
       type: dribbleSuccess ? 'Dribble' : 'DribbleCut',
-      attack: attackingPlayer.getRef(),
-      defense: defensePlayer.getRef(),
-    } as ActionLogDataWithoutTime<'Dribble' | 'DribbleCut'>;
+      attacker: attackingPlayer.getRef(),
+      defender: defensePlayer.getRef(),
+    } as MatchActionLogData['Dribble'] | MatchActionLogData['DribbleCut'];
 
     actions.push(dribbleResult);
 
@@ -60,7 +66,7 @@ export class Dribble extends MatchAction {
           from: defensePlayer.getRef(),
           to: attackingPlayer.getRef(),
           duration: rng.integer(...MatchAction.ALTERED_STATE_DURATIONS.injury),
-        } as ActionLogDataWithoutTime<'FaulWithInjury'>);
+        } as MatchActionLogData['FaulWithInjury']);
 
         const substitutePlayer = Dribble.getSubstitutePlayer(
           rng,
@@ -70,23 +76,23 @@ export class Dribble extends MatchAction {
         if (substitutePlayer) {
           actions.push({
             type: 'Substitution',
-            out: attackingPlayer.getRef(),
-            in: substitutePlayer,
-          } as ActionLogDataWithoutTime<'Substitution'>);
+            playerOut: attackingPlayer.getRef(),
+            playerIn: substitutePlayer,
+          } as MatchActionLogData['Substitution']);
         }
       } else {
         actions.push({
           type: 'FaulWithoutInjury',
           from: defensePlayer.getRef(),
           to: attackingPlayer.getRef(),
-        } as ActionLogDataWithoutTime<'FaulWithoutInjury'>);
+        } as MatchActionLogData['FaulWithoutInjury']);
       }
     } else if (gotInjuried) {
       actions.push({
         type: 'Injury',
         from: defensePlayer.getRef(),
-        player: attackingPlayer.getRef(),
-      } as ActionLogDataWithoutTime<'Injury'>);
+        injuriedPlayer: attackingPlayer.getRef(),
+      } as MatchActionLogData['Injury']);
 
       const substitutePlayer = Dribble.getSubstitutePlayer(
         rng,
@@ -96,9 +102,9 @@ export class Dribble extends MatchAction {
       if (substitutePlayer) {
         actions.push({
           type: 'Substitution',
-          out: attackingPlayer.getRef(),
-          in: substitutePlayer,
-        } as ActionLogDataWithoutTime<'Substitution'>);
+          playerOut: attackingPlayer.getRef(),
+          playerIn: substitutePlayer,
+        } as MatchActionLogData['Substitution']);
       }
     }
 

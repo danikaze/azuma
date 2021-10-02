@@ -1,6 +1,10 @@
+import {
+  AnyMatchActionLogData,
+  MatchActionLogData,
+} from '@utils/match-simulator/action-log/interfaces';
 import { MatchSimulatorQuerier } from '@utils/match-simulator/sim/match-simulator-querier';
 import { Rng } from '@utils/rng';
-import { ActionLogDataWithoutTime, MatchAction } from '..';
+import { MatchAction } from '..';
 
 export class RecoverLostBall extends MatchAction {
   public static getChances(sim: MatchSimulatorQuerier): number {
@@ -8,14 +12,14 @@ export class RecoverLostBall extends MatchAction {
     return MatchAction.DEFAULT_ACTION_CHANCES;
   }
 
-  public run(sim: MatchSimulatorQuerier, rng: Rng): ActionLogDataWithoutTime[] {
+  public run(sim: MatchSimulatorQuerier, rng: Rng): AnyMatchActionLogData[] {
     const player = sim.getRandomPlayer()!;
 
     return [
       {
         type: 'RecoverLostBall',
         player: player.getRef(),
-      } as ActionLogDataWithoutTime<'RecoverLostBall'>,
+      } as MatchActionLogData['RecoverLostBall'],
     ];
   }
 }
